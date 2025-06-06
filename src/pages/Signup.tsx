@@ -36,6 +36,14 @@ const Signup: React.FC = () => {
 
       if (signUpError) throw signUpError;
 
+      // Check if we got a user back
+      if (!data?.user) {
+        throw new Error('Failed to create account');
+      }
+
+      // Sign out the user to prevent auto-login
+      await supabase.auth.signOut();
+
       // Store email in sessionStorage for verification pending page
       sessionStorage.setItem('pendingVerificationEmail', email);
       // Set a flag to show success message on login page

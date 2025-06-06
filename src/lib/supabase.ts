@@ -8,12 +8,6 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: true,
-    flowType: 'pkce',
-    signUpOptions: {
-      emailRedirectTo: `${window.location.origin}/verify`,
-      data: {
-        email_confirmed: false
-      }
-    }
+    flowType: 'pkce'
   }
 }); 
