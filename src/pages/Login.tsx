@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
@@ -7,7 +7,23 @@ const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showSuccess, setShowSuccess] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if we should show the success message
+    const shouldShowSuccess = sessionStorage.getItem('showVerificationSuccess');
+    if (shouldShowSuccess) {
+      setShowSuccess(true);
+      // Remove the flag after showing the message
+      sessionStorage.removeItem('showVerificationSuccess');
+      // Auto-hide the message after 5 seconds
+      const timer = setTimeout(() => {
+        setShowSuccess(false);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,12 +31,13 @@ const Login: React.FC = () => {
     setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { error: signInError } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
 
-      if (error) throw error;
+      if (signInError) throw signInError;
+
       navigate('/dashboard');
     } catch (error: any) {
       setError(error.message);
@@ -32,9 +49,15 @@ const Login: React.FC = () => {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="max-w-md w-full mx-4">
+        {showSuccess && (
+          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 rounded-lg text-green-400 text-center animate-fade-in">
+            Your email has been verified! You can now log in to your account.
+          </div>
+        )}
+
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">Welcome Back</h1>
-          <p className="text-gray-400">Sign in to your BikeForU account</p>
+          <p className="text-gray-400">Sign in to your account</p>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-6">
@@ -75,17 +98,14 @@ const Login: React.FC = () => {
             disabled={loading}
             className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Signing in...' : 'Sign in'}
           </button>
-
-          <div className="text-center">
-            <Link to="/forgot-password" className="text-blue-400 hover:text-blue-300">
-              Forgot your password?
-            </Link>
-          </div>
         </form>
 
-        <div className="mt-8 text-center">
+        <div className="mt-8 text-center space-y-4">
+          <Link to="/forgot-password" className="text-blue-400 hover:text-blue-300 block">
+            Forgot your password?
+          </Link>
           <p className="text-gray-400">
             Don't have an account?{' '}
             <Link to="/signup" className="text-blue-400 hover:text-blue-300">

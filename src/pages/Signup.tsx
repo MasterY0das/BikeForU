@@ -37,6 +37,8 @@ const Signup: React.FC = () => {
 
       // Store email in sessionStorage for verification pending page
       sessionStorage.setItem('pendingVerificationEmail', email);
+      // Set a flag to show success message on login page
+      sessionStorage.setItem('showVerificationSuccess', 'true');
       navigate('/verification-pending');
     } catch (error: any) {
       setError(error.message);
