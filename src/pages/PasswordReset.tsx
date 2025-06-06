@@ -17,7 +17,7 @@ const PasswordReset: React.FC = () => {
 
       if (!token) {
         setStatus('error');
-        setErrorMessage('Link expired');
+        
         return;
       }
 
@@ -34,11 +34,10 @@ const PasswordReset: React.FC = () => {
           setStatus('idle');
         } else {
           setStatus('error');
-          setErrorMessage('Link expired');
         }
       } catch (error: any) {
         setStatus('error');
-        setErrorMessage('Link expired');
+        
       }
     };
 
