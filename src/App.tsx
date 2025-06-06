@@ -48,19 +48,17 @@ const App: React.FC = () => {
 // Protected Route component to check for valid tokens
 const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [searchParams] = useSearchParams();
+  const { user } = useAuth();
   const token = searchParams.get('token');
+  const isResetPasswordRoute = window.location.pathname === '/reset-password';
 
   // For reset password route, we only need to check for token
-  if (window.location.pathname === '/reset-password') {
-    if (!token) {
-      return <Navigate to="/" replace />;
-    }
-    return <>{children}</>;
+  if (isResetPasswordRoute && !token) {
+    return <Navigate to="/" replace />;
   }
 
   // For other protected routes, check authentication
-  const { user } = useAuth();
-  if (!user) {
+  if (!isResetPasswordRoute && !user) {
     return <Navigate to="/login" replace />;
   }
 
