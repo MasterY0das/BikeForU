@@ -12,12 +12,16 @@ const PasswordReset: React.FC = () => {
 
   useEffect(() => {
     const verifyToken = async () => {
+      // Clean up URL parameters
+      const cleanUrl = window.location.href.split('?')[0];
+      window.history.replaceState({}, document.title, cleanUrl);
+
       const token = searchParams.get('token');
       console.log('PasswordReset Debug:', { token });
 
       if (!token) {
         setStatus('error');
-        
+        setErrorMessage('Link expired');
         return;
       }
 
@@ -34,10 +38,11 @@ const PasswordReset: React.FC = () => {
           setStatus('idle');
         } else {
           setStatus('error');
+          setErrorMessage('Link expired');
         }
       } catch (error: any) {
         setStatus('error');
-        
+        setErrorMessage('Link expired');
       }
     };
 
