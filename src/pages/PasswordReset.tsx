@@ -1,13 +1,45 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const PasswordReset: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const verifyResetCode = async () => {
+      const code = searchParams.get('code');
+      const token = searchParams.get('token');
+      console.log('Reset parameters:', { code, token });
+
+      if (!code && !token) {
+        setStatus('error');
+        setErrorMessage('Invalid or expired reset link');
+        return;
+      }
+
+      try {
+        // Try code first, then token
+        const resetCode = code || token;
+        if (!resetCode) {
+          throw new Error('No valid reset code found');
+        }
+        const { error } = await supabase.auth.exchangeCodeForSession(resetCode);
+        if (error) throw error;
+        setStatus('idle');
+      } catch (error: any) {
+        console.error('Code verification error:', error);
+        setStatus('error');
+        setErrorMessage('This password reset link has expired. Please request a new one.');
+      }
+    };
+
+    verifyResetCode();
+  }, [searchParams]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
