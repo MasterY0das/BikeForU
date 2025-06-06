@@ -15,19 +15,15 @@ const ForgotPassword: React.FC = () => {
     setError('');
 
     try {
-      // Send reset password email with the correct redirect URL format
-      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password?type=recovery`,
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
       });
 
-      if (resetError) throw resetError;
-
-      // Always show success message for security reasons
+      if (error) throw error;
       setSuccess(true);
     } catch (error: any) {
       console.error('Password reset error:', error);
-      // Show a generic error message for security
-      setError('An error occurred. Please try again later.');
+      setError(error.message);
     } finally {
       setLoading(false);
     }

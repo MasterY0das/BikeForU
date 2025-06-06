@@ -52,13 +52,22 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const token = searchParams.get('token');
   const isResetPasswordRoute = window.location.pathname === '/reset-password';
 
+  console.log('ProtectedRoute Debug:', {
+    pathname: window.location.pathname,
+    token,
+    isResetPasswordRoute,
+    user: user ? 'exists' : 'null'
+  });
+
   // For reset password route, we only need to check for token
   if (isResetPasswordRoute && !token) {
+    console.log('Redirecting to home: No token found');
     return <Navigate to="/" replace />;
   }
 
   // For other protected routes, check authentication
   if (!isResetPasswordRoute && !user) {
+    console.log('Redirecting to login: No user found');
     return <Navigate to="/login" replace />;
   }
 
