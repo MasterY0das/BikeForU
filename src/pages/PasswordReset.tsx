@@ -15,22 +15,30 @@ const PasswordReset: React.FC = () => {
       const token = searchParams.get('token');
       const type = searchParams.get('type');
 
-      if (!token || type !== 'recovery') {
+      if (!token) {
         setStatus('error');
         setErrorMessage('Invalid or expired reset link');
         return;
       }
 
       try {
-        // For PKCE flow, we need to exchange the token
-        const { error } = await supabase.auth.exchangeCodeForSession(token);
+        // Try to exchange the code for a session
+        const { data, error } = await supabase.auth.exchangeCodeForSession(token);
         
-        if (error) throw error;
-        setStatus('idle');
+        if (error) {
+          console.error('Token exchange error:', error);
+          throw error;
+        }
+
+        if (data?.session) {
+          setStatus('idle');
+        } else {
+          throw new Error('No session established');
+        }
       } catch (error: any) {
         console.error('Token verification error:', error);
         setStatus('error');
-        setErrorMessage('Invalid or expired reset link');
+        setErrorMessage('Invalid or expired reset link. Please request a new password reset.');
       }
     };
 
