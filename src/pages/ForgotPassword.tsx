@@ -27,13 +27,8 @@ const ForgotPassword: React.FC = () => {
     }
 
     try {
-      // For mobile apps, use the app's deep link URL
-      const redirectTo = window.location.hostname.includes('vercel.app') 
-        ? 'bikeforu://reset-password'  // Mobile deep link
-        : `${window.location.origin}/reset-password`; // Web URL
-
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: redirectTo,
+        redirectTo: `${window.location.origin}/reset-password`,
       });
 
       if (error) throw error;
