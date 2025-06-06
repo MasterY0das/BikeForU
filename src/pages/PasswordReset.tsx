@@ -15,7 +15,7 @@ const PasswordReset: React.FC = () => {
       const token = searchParams.get('token');
       const type = searchParams.get('type');
 
-      if (!token || type !== 'recovery') {
+      if (!token) {
         setStatus('error');
         setErrorMessage('Invalid or expired reset link');
         return;
@@ -30,7 +30,7 @@ const PasswordReset: React.FC = () => {
       } catch (error: any) {
         console.error('Token verification error:', error);
         setStatus('error');
-        setErrorMessage('Invalid or expired reset link');
+        setErrorMessage('Invalid or expired reset link. Please request a new password reset link.');
       }
     };
 
