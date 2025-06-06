@@ -3,59 +3,68 @@ import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const EmailVerificationPending: React.FC = () => {
-  const [email, setEmail] = useState<string | null>(null);
+  const [email, setEmail] = useState<string>('');
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get email from sessionStorage
-    const storedEmail = sessionStorage.getItem('pendingVerificationEmail');
-    if (!storedEmail) {
-      navigate('/signup');
-      return;
-    }
-    setEmail(storedEmail);
-
-    // Set up real-time subscription for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
-        // Email is verified, clear storage and redirect to login
-        sessionStorage.removeItem('pendingVerificationEmail');
-        navigate('/login');
-      }
-    });
-
-    // Check initial verification status
     const checkVerification = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (session?.user?.email_confirmed_at) {
-        sessionStorage.removeItem('pendingVerificationEmail');
-        navigate('/login');
+      try {
+        // Get the stored email
+        const storedEmail = sessionStorage.getItem('pendingVerificationEmail');
+        if (!storedEmail) {
+          navigate('/signup');
+          return;
+        }
+        setEmail(storedEmail);
+
+        // Check if user is already verified
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        if (sessionError) throw sessionError;
+
+        if (session?.user?.email_confirmed_at) {
+          // User is already verified, redirect to login
+          sessionStorage.setItem('showVerificationSuccess', 'true');
+          navigate('/login');
+          return;
+        }
+
+        // Set up auth state change listener
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+          if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
+            // Email was verified, redirect to login
+            sessionStorage.setItem('showVerificationSuccess', 'true');
+            navigate('/login');
+          }
+        });
+
+        return () => {
+          subscription.unsubscribe();
+        };
+      } catch (err: any) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
     checkVerification();
-
-    // Cleanup subscription
-    return () => {
-      subscription.unsubscribe();
-    };
   }, [navigate]);
 
   const handleResendEmail = async () => {
-    if (!email) return;
-    
     try {
+      setLoading(true);
       const { error } = await supabase.auth.resend({
         type: 'signup',
         email,
       });
-      
       if (error) throw error;
-      alert('Verification email resent!');
-    } catch (error: any) {
-      alert(error.message);
+      alert('Verification email resent! Please check your inbox.');
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -64,7 +73,23 @@ const EmailVerificationPending: React.FC = () => {
       <div className="min-h-screen bg-black text-white flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Loading...</p>
+          <p>Checking verification status...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-500 mb-4">{error}</p>
+          <button
+            onClick={() => navigate('/signup')}
+            className="bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+          >
+            Back to Sign Up
+          </button>
         </div>
       </div>
     );
@@ -73,32 +98,29 @@ const EmailVerificationPending: React.FC = () => {
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
       <div className="max-w-md w-full mx-4 text-center">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-4">Verify Your Email</h1>
-          <p className="text-gray-400">
-            We've sent a verification email to <span className="text-white">{email}</span>
-          </p>
-        </div>
-
-        <div className="bg-gray-900 rounded-lg p-8">
-          <div className="animate-pulse mb-6">
-            <div className="text-6xl mb-4">📧</div>
-          </div>
-          
-          <p className="text-gray-300 mb-6">
-            Please check your email and click the verification link to continue.
-            The page will automatically redirect you once your email is verified.
-          </p>
-
+        <h1 className="text-4xl font-bold mb-4">Verify Your Email</h1>
+        <p className="text-gray-400 mb-6">
+          We've sent a verification email to <span className="text-white font-semibold">{email}</span>
+        </p>
+        <p className="text-gray-400 mb-8">
+          Please check your inbox and click the verification link to continue.
+        </p>
+        <div className="space-y-4">
           <button
             onClick={handleResendEmail}
-            className="text-blue-400 hover:text-blue-300 underline"
+            disabled={loading}
+            className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
           >
-            Resend verification email
+            {loading ? 'Sending...' : 'Resend Verification Email'}
+          </button>
+          <button
+            onClick={() => navigate('/login')}
+            className="w-full bg-transparent border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
+          >
+            Back to Login
           </button>
         </div>
-
-        <p className="mt-8 text-gray-400">
+        <p className="text-gray-400 mt-6 text-sm">
           Didn't receive the email? Check your spam folder or try a different email address.
         </p>
       </div>

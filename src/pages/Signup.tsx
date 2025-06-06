@@ -22,6 +22,9 @@ const Signup: React.FC = () => {
     }
 
     try {
+      // First, sign out any existing session
+      await supabase.auth.signOut();
+
       // Sign up the user with email verification required
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -41,14 +44,16 @@ const Signup: React.FC = () => {
         throw new Error('Failed to create account');
       }
 
-      // Sign out the user to prevent auto-login
+      // Immediately sign out to prevent auto-login
       await supabase.auth.signOut();
 
       // Store email in sessionStorage for verification pending page
       sessionStorage.setItem('pendingVerificationEmail', email);
       // Set a flag to show success message on login page
       sessionStorage.setItem('showVerificationSuccess', 'true');
-      navigate('/verification-pending');
+
+      // Force a page reload to clear any cached auth state
+      window.location.href = '/verification-pending';
     } catch (error: any) {
       setError(error.message);
     } finally {
