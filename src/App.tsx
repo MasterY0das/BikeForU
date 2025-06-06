@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import EmailVerification from './pages/EmailVerification';
 import EmailVerificationPending from './pages/EmailVerificationPending';
 import PasswordReset from './pages/PasswordReset';
+import ForgotPassword from './pages/ForgotPassword';
 
 const App: React.FC = () => {
   return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/verification-pending" element={<EmailVerificationPending />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route 
           path="/verify" 
           element={
