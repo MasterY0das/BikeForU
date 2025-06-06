@@ -31,31 +31,21 @@ const EmailVerificationPending: React.FC = () => {
 
         console.log('Current session state:', session);
 
+        // Check if the user is verified
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        if (userError) {
+          console.error('User check error:', userError);
+          return;
+        }
+
+        console.log('Current user state:', user);
+
         // If user is verified, redirect
-        if (session?.user?.email_confirmed_at) {
-          console.log('Email confirmed, redirecting to login...');
+        if (user?.email_confirmed_at) {
+          console.log('User verified, redirecting to login...');
           clearInterval(checkInterval);
           sessionStorage.setItem('showVerificationSuccess', 'true');
-          // Force a small delay to ensure the success message is set
-          setTimeout(() => {
-            navigate('/login');
-          }, 100);
-        } else {
-          // Also check if the user is already verified through a direct user check
-          const { data: { user }, error: userError } = await supabase.auth.getUser();
-          if (userError) {
-            console.error('User check error:', userError);
-            return;
-          }
-          
-          if (user?.email_confirmed_at) {
-            console.log('User verified through direct check, redirecting to login...');
-            clearInterval(checkInterval);
-            sessionStorage.setItem('showVerificationSuccess', 'true');
-            setTimeout(() => {
-              navigate('/login');
-            }, 100);
-          }
+          navigate('/login');
         }
       } catch (err) {
         console.error('Error checking verification status:', err);

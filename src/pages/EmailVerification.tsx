@@ -25,6 +25,10 @@ const EmailVerification: React.FC = () => {
 
         if (error) throw error;
         setVerificationStatus('success');
+        setTimeout(() => {
+          sessionStorage.setItem('showVerificationSuccess', 'true');
+          navigate('/login');
+        }, 1500);
       } catch (error: any) {
         setVerificationStatus('error');
         setErrorMessage(error.message);
