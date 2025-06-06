@@ -22,17 +22,6 @@ const Signup: React.FC = () => {
     }
 
     try {
-      // First, check if the email is already registered
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('email')
-        .eq('email', email)
-        .single();
-
-      if (existingUser) {
-        throw new Error('Email already registered');
-      }
-
       // Sign up the user with email verification required
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
@@ -46,11 +35,6 @@ const Signup: React.FC = () => {
       });
 
       if (signUpError) throw signUpError;
-
-      // Check if email confirmation is required
-      if (!data?.user?.identities?.length) {
-        throw new Error('Email confirmation is required. Please check your email.');
-      }
 
       // Store email in sessionStorage for verification pending page
       sessionStorage.setItem('pendingVerificationEmail', email);
