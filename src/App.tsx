@@ -34,9 +34,7 @@ const App: React.FC = () => {
           <Route 
             path="/reset-password" 
             element={
-              <ProtectedRoute>
-                <PasswordReset />
-              </ProtectedRoute>
+              <PasswordReset />
             } 
           />
         </Routes>
