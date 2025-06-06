@@ -12,8 +12,8 @@ const PasswordReset: React.FC = () => {
 
   useEffect(() => {
     const verifyToken = async () => {
-      const token = searchParams.get('token');
-      console.log('PasswordReset Debug:', { token });
+      const token = searchParams.get('token') || searchParams.get('code');
+      console.log('PasswordReset Debug:', { token, searchParams: Object.fromEntries(searchParams.entries()) });
 
       if (!token) {
         console.log('No token found in URL');
