@@ -15,14 +15,19 @@ const ForgotPassword: React.FC = () => {
     setError('');
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      // Send reset password email
+      const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
 
-      if (error) throw error;
+      if (resetError) throw resetError;
+
+      // Always show success message for security reasons
       setSuccess(true);
     } catch (error: any) {
-      setError(error.message);
+      console.error('Password reset error:', error);
+      // Show a generic error message for security
+      setError('An error occurred. Please try again later.');
     } finally {
       setLoading(false);
     }
@@ -42,6 +47,10 @@ const ForgotPassword: React.FC = () => {
             <h2 className="text-2xl font-semibold mb-4">Check Your Email</h2>
             <p className="text-gray-400 mb-6">
               If an account exists with {email}, you will receive a password reset link.
+              <br />
+              <span className="text-sm mt-2 block">
+                The link will expire in 24 hours.
+              </span>
             </p>
             <button
               onClick={() => navigate('/login')}
@@ -63,6 +72,7 @@ const ForgotPassword: React.FC = () => {
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
                 required
+                placeholder="Enter your email address"
               />
             </div>
 
@@ -75,7 +85,14 @@ const ForgotPassword: React.FC = () => {
               disabled={loading}
               className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
             >
-              {loading ? 'Sending...' : 'Send Reset Link'}
+              {loading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black mr-2"></div>
+                  Sending...
+                </div>
+              ) : (
+                'Send Reset Link'
+              )}
             </button>
 
             <div className="text-center">
