@@ -22,12 +22,9 @@ const PasswordReset: React.FC = () => {
       }
 
       try {
-        // Verify the token
-        const { error } = await supabase.auth.verifyOtp({
-          token_hash: token,
-          type: 'recovery'
-        });
-
+        // For PKCE flow, we need to exchange the token
+        const { error } = await supabase.auth.exchangeCodeForSession(token);
+        
         if (error) throw error;
         setStatus('idle');
       } catch (error: any) {

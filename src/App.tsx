@@ -46,8 +46,8 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
   const token = searchParams.get('token');
   const type = searchParams.get('type');
 
-  // For password reset, we need both token and type=recovery
-  if (!token || (type !== 'recovery' && type !== 'signup')) {
+  // For password reset, we need the token
+  if (!token) {
     return <Navigate to="/" replace />;
   }
 

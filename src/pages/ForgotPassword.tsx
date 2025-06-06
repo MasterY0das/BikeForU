@@ -17,7 +17,7 @@ const ForgotPassword: React.FC = () => {
     try {
       // Send reset password email
       const { error: resetError } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/reset-password?type=recovery`,
+        redirectTo: 'https://bike-for-u.vercel.app/reset-password',
       });
 
       if (resetError) throw resetError;
