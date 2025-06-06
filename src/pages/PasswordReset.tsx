@@ -16,32 +16,29 @@ const PasswordReset: React.FC = () => {
       console.log('PasswordReset Debug:', { token });
 
       if (!token) {
-        console.log('No token found in URL');
         setStatus('error');
-        setErrorMessage('Invalid or expired reset link');
+        setErrorMessage('Link expired');
         return;
       }
 
       try {
-        console.log('Attempting to exchange token for session');
         const { data, error } = await supabase.auth.exchangeCodeForSession(token);
         
         if (error) {
-          console.error('Token exchange error:', error);
-          throw error;
+          setStatus('error');
+          setErrorMessage('Link expired');
+          return;
         }
 
         if (data?.session) {
-          console.log('Token exchange successful, session established');
           setStatus('idle');
         } else {
-          console.log('No session established after token exchange');
-          throw new Error('No session established');
+          setStatus('error');
+          setErrorMessage('Link expired');
         }
       } catch (error: any) {
-        console.error('Token verification error:', error);
         setStatus('error');
-        setErrorMessage('Invalid or expired reset link. Please request a new password reset.');
+        setErrorMessage('Link expired');
       }
     };
 

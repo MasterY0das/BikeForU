@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
+const COOLDOWN_MINUTES = 5;
+
 const ForgotPassword: React.FC = () => {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -14,12 +16,23 @@ const ForgotPassword: React.FC = () => {
     setLoading(true);
     setError('');
 
+    // Cooldown logic
+    const lastResetKey = `last_reset_${email}`;
+    const lastReset = localStorage.getItem(lastResetKey);
+    const now = Date.now();
+    if (lastReset && now - parseInt(lastReset, 10) < COOLDOWN_MINUTES * 60 * 1000) {
+      setError(`You can only request a password reset every ${COOLDOWN_MINUTES} minutes. Please try again later.`);
+      setLoading(false);
+      return;
+    }
+
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/reset-password`,
       });
 
       if (error) throw error;
+      localStorage.setItem(lastResetKey, now.toString());
       setSuccess(true);
     } catch (error: any) {
       console.error('Password reset error:', error);
