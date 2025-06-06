@@ -18,7 +18,7 @@ const PasswordReset: React.FC = () => {
       if (!token) {
         console.log('No token found in URL');
         setStatus('error');
-        setErrorMessage('Invalid or expired reset link');
+        setErrorMessage('This password reset link has expired. Please request a new one.');
         return;
       }
 
@@ -36,12 +36,12 @@ const PasswordReset: React.FC = () => {
           setStatus('idle');
         } else {
           console.log('No session established after token exchange');
-          throw new Error('No session established');
+          throw new Error('This password reset link has expired. Please request a new one.');
         }
       } catch (error: any) {
         console.error('Token verification error:', error);
         setStatus('error');
-        setErrorMessage('Invalid or expired reset link. Please request a new password reset.');
+        setErrorMessage('This password reset link has expired. Please request a new one.');
       }
     };
 
@@ -90,68 +90,60 @@ const PasswordReset: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
-      <div className="max-w-2xl mx-auto px-6 py-12 text-center">
-        <div className="mb-8">
-          <h1 className="text-5xl font-bold mb-4">BikeForU</h1>
-          <p className="text-xl text-gray-400">Reset your password</p>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8">
+        <div>
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Reset your password
+          </h2>
         </div>
-
-        <div className="bg-gray-900 rounded-2xl p-8 shadow-2xl">
-          {status === 'success' ? (
-            <div className="space-y-6">
-              <div className="text-green-500 text-6xl mb-4">✓</div>
-              <h2 className="text-3xl font-semibold">Password Reset Successful!</h2>
-              <p className="text-gray-400">Your password has been successfully updated.</p>
-              <button
-                onClick={() => navigate('/login')}
-                className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
-              >
-                Return to Login
-              </button>
-            </div>
-          ) : (
-            <form onSubmit={handleResetPassword} className="space-y-6">
-              <div className="space-y-4">
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  placeholder="New Password"
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
-                  required
-                />
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="Confirm New Password"
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
-                  required
-                />
+        {status === 'error' ? (
+          <div className="rounded-md bg-red-50 p-4">
+            <div className="flex">
+              <div className="ml-3">
+                <h3 className="text-sm font-medium text-red-800">
+                  {errorMessage}
+                </h3>
               </div>
+            </div>
+          </div>
+        ) : (
+          <form className="mt-8 space-y-6" onSubmit={handleResetPassword}>
+            <div className="space-y-4">
+              <input
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="New Password"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
+                required
+              />
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="Confirm New Password"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
+                required
+              />
+            </div>
 
-              {status === 'error' && (
-                <p className="text-red-500 text-sm">{errorMessage}</p>
+            <button
+              type="submit"
+              disabled={status === 'loading'}
+              className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
+            >
+              {status === 'loading' ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black mr-2"></div>
+                  Resetting Password...
+                </div>
+              ) : (
+                'Reset Password'
               )}
-
-              <button
-                type="submit"
-                disabled={status === 'loading'}
-                className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
-              >
-                {status === 'loading' ? (
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black mr-2"></div>
-                    Resetting Password...
-                  </div>
-                ) : (
-                  'Reset Password'
-                )}
-              </button>
-            </form>
-          )}
-        </div>
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
