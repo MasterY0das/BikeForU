@@ -37,7 +37,10 @@ const EmailVerificationPending: React.FC = () => {
         if (users?.email_confirmed_at) {
           clearInterval(checkInterval);
           sessionStorage.setItem('showVerificationSuccess', 'true');
-          navigate('/login');
+          // Force a small delay to ensure the success message is set
+          setTimeout(() => {
+            navigate('/login');
+          }, 100);
         }
       } catch (err) {
         console.error('Error checking verification status:', err);
@@ -64,6 +67,12 @@ const EmailVerificationPending: React.FC = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleBackToLogin = () => {
+    // Clear the verification success flag before navigating
+    sessionStorage.removeItem('showVerificationSuccess');
+    navigate('/login');
   };
 
   if (loading) {
@@ -114,7 +123,7 @@ const EmailVerificationPending: React.FC = () => {
             {loading ? 'Sending...' : 'Resend Verification Email'}
           </button>
           <button
-            onClick={() => navigate('/login')}
+            onClick={handleBackToLogin}
             className="w-full bg-transparent border border-white text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
           >
             Back to Login
