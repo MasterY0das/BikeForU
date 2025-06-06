@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    @apply bg-black text-white antialiased;
+  }
+}
+
+@layer components {
+  .apple-button {
+    @apply inline-block bg-white text-black px-8 py-4 rounded-full text-lg font-semibold 
+           hover:bg-gray-100 transition-colors duration-200;
+  }
+} 
