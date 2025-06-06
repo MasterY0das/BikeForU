@@ -22,7 +22,7 @@ const Signup: React.FC = () => {
     }
 
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -34,6 +34,11 @@ const Signup: React.FC = () => {
       });
 
       if (signUpError) throw signUpError;
+
+      // Check if email confirmation is required
+      if (data?.user?.identities?.length === 0) {
+        throw new Error('Email confirmation is required. Please check your email.');
+      }
 
       // Store email in sessionStorage for verification pending page
       sessionStorage.setItem('pendingVerificationEmail', email);
