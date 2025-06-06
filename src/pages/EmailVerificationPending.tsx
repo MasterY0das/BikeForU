@@ -9,47 +9,45 @@ const EmailVerificationPending: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const checkVerification = async () => {
+    // Get the stored email
+    const storedEmail = sessionStorage.getItem('pendingVerificationEmail');
+    if (!storedEmail) {
+      navigate('/signup');
+      return;
+    }
+    setEmail(storedEmail);
+    setLoading(false);
+
+    // Set up interval to check verification status
+    const checkInterval = setInterval(async () => {
       try {
-        // Get the stored email
-        const storedEmail = sessionStorage.getItem('pendingVerificationEmail');
-        if (!storedEmail) {
-          navigate('/signup');
+        // Query the database for the user's email
+        const { data: users, error: queryError } = await supabase
+          .from('users')
+          .select('email_confirmed_at')
+          .eq('email', storedEmail)
+          .single();
+
+        if (queryError) {
+          // If user doesn't exist yet, keep checking
           return;
         }
-        setEmail(storedEmail);
 
-        // Check if user is already verified
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
-        if (sessionError) throw sessionError;
-
-        if (session?.user?.email_confirmed_at) {
-          // User is already verified, redirect to login
+        // If email_confirmed_at exists, user is verified
+        if (users?.email_confirmed_at) {
+          clearInterval(checkInterval);
           sessionStorage.setItem('showVerificationSuccess', 'true');
           navigate('/login');
-          return;
         }
-
-        // Set up auth state change listener
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-          if (event === 'SIGNED_IN' && session?.user?.email_confirmed_at) {
-            // Email was verified, redirect to login
-            sessionStorage.setItem('showVerificationSuccess', 'true');
-            navigate('/login');
-          }
-        });
-
-        return () => {
-          subscription.unsubscribe();
-        };
-      } catch (err: any) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        console.error('Error checking verification status:', err);
       }
-    };
+    }, 2000); // Check every 2 seconds
 
-    checkVerification();
+    // Cleanup interval on component unmount
+    return () => {
+      clearInterval(checkInterval);
+    };
   }, [navigate]);
 
   const handleResendEmail = async () => {
@@ -104,6 +102,8 @@ const EmailVerificationPending: React.FC = () => {
         </p>
         <p className="text-gray-400 mb-8">
           Please check your inbox and click the verification link to continue.
+          <br />
+          <span className="text-sm">This page will automatically redirect you once verified.</span>
         </p>
         <div className="space-y-4">
           <button
