@@ -21,20 +21,16 @@ const EmailVerificationPending: React.FC = () => {
     // Set up interval to check verification status
     const checkInterval = setInterval(async () => {
       try {
-        // Query the database for the user's email
-        const { data: users, error: queryError } = await supabase
-          .from('users')
-          .select('email_confirmed_at')
-          .eq('email', storedEmail)
-          .single();
-
-        if (queryError) {
-          // If user doesn't exist yet, keep checking
+        // Check auth state directly
+        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        
+        if (sessionError) {
+          console.error('Session error:', sessionError);
           return;
         }
 
-        // If email_confirmed_at exists, user is verified
-        if (users?.email_confirmed_at) {
+        // If user is verified, redirect
+        if (session?.user?.email_confirmed_at) {
           clearInterval(checkInterval);
           sessionStorage.setItem('showVerificationSuccess', 'true');
           // Force a small delay to ensure the success message is set
