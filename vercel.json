@@ -5,28 +5,6 @@
       "destination": "/index.html"
     }
   ],
-  "routes": [
-    {
-      "src": "/reset-password",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/verify",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/login",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/signup",
-      "dest": "/index.html"
-    },
-    {
-      "src": "/dashboard",
-      "dest": "/index.html"
-    }
-  ],
   "buildCommand": "npm run build",
   "outputDirectory": "build",
   "framework": "create-react-app"
