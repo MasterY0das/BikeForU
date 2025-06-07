@@ -37,14 +37,6 @@ const App: React.FC = () => {
               <PasswordReset />
             } 
           />
-          <Route 
-            path="/" 
-            element={
-              <CodeRedirect>
-                <Home />
-              </CodeRedirect>
-            } 
-          />
         </Routes>
       </Router>
     </AuthProvider>
@@ -77,18 +69,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) =
     return <Navigate to="/login" replace />;
   }
 
-  return <>{children}</>;
-};
-
-// Add this new component to handle code redirects
-const CodeRedirect: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [searchParams] = useSearchParams();
-  const code = searchParams.get('code');
-  
-  if (code) {
-    return <Navigate to={`/reset-password?code=${code}`} replace />;
-  }
-  
   return <>{children}</>;
 };
 

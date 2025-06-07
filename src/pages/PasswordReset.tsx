@@ -1,50 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
 
 const PasswordReset: React.FC = () => {
-  const [searchParams] = useSearchParams();
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('loading');
+  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const verifyResetCode = async () => {
-      const code = searchParams.get('code');
-      console.log('Reset code:', code);
-
-      if (!code) {
-        setStatus('error');
-        setErrorMessage('Invalid or expired reset link');
-        return;
-      }
-
-      try {
-        // Exchange the code for a session
-        const { data, error } = await supabase.auth.exchangeCodeForSession(code);
-        
-        if (error) {
-          console.error('Code exchange error:', error);
-          throw error;
-        }
-
-        if (data?.session) {
-          console.log('Session established successfully');
-          setStatus('idle');
-        } else {
-          throw new Error('Failed to establish session');
-        }
-      } catch (error: any) {
-        console.error('Code verification error:', error);
-        setStatus('error');
-        setErrorMessage('This password reset link has expired. Please request a new one.');
-      }
-    };
-
-    verifyResetCode();
-  }, [searchParams]);
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -75,17 +38,6 @@ const PasswordReset: React.FC = () => {
       setErrorMessage(error.message);
     }
   };
-
-  if (status === 'loading') {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Verifying reset link...</p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-black text-white flex items-center justify-center">
@@ -145,10 +97,10 @@ const PasswordReset: React.FC = () => {
 
             <button
               type="submit"
-              disabled={status !== 'idle'}
+              disabled={status === 'loading'}
               className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
             >
-              {status !== 'idle' ? (
+              {status === 'loading' ? (
                 <div className="flex items-center justify-center">
                   <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black mr-2"></div>
                   Resetting Password...
