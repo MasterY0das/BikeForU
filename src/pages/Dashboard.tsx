@@ -12,6 +12,28 @@ interface Route {
   end_time: string;
   privacy: string;
   created_at: string;
+  user_id: string;
+  sent?: string;
+  sender?: {
+    id: string;
+    name: string;
+    username: string;
+    avatar_url: string | null;
+  };
+}
+
+interface Message {
+  id: string;
+  route_id: string;
+  sent: string;
+  text: string;
+  created_at: string;
+  sender?: {
+    id: string;
+    name: string;
+    username: string;
+    avatar_url: string | null;
+  };
 }
 
 interface Friend {
@@ -34,10 +56,14 @@ interface Profile {
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
   const [routes, setRoutes] = useState<Route[]>([]);
+  const [receivedRoutes, setReceivedRoutes] = useState<Route[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'rides' | 'community'>('rides');
+  const [selectedRoute, setSelectedRoute] = useState<Route | null>(null);
+  const [routeMessages, setRouteMessages] = useState<Message[]>([]);
+  const [showRouteDetail, setShowRouteDetail] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -57,6 +83,10 @@ const Dashboard: React.FC = () => {
       // Load user routes
       const userRoutes = await DatabaseService.getUserRoutes(user.id);
       setRoutes(userRoutes || []);
+
+      // Load received routes (routes sent to the user)
+      const receivedRoutes = await DatabaseService.getReceivedRoutes(user.id);
+      setReceivedRoutes(receivedRoutes || []);
 
       // Load user friends
       const userFriends = await DatabaseService.getUserFriends(user.id);
@@ -80,6 +110,21 @@ const Dashboard: React.FC = () => {
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString();
+  };
+
+  const handleRouteClick = async (route: Route) => {
+    setSelectedRoute(route);
+    setShowRouteDetail(true);
+    
+    // Load messages for this route
+    const messages = await DatabaseService.getRouteMessages(route.id);
+    setRouteMessages(messages || []);
+  };
+
+  const handleBackToRoutes = () => {
+    setShowRouteDetail(false);
+    setSelectedRoute(null);
+    setRouteMessages([]);
   };
 
   if (loading) {
@@ -156,7 +201,7 @@ const Dashboard: React.FC = () => {
                 : 'text-gray-300 hover:text-white'
             }`}
           >
-            Your Rides ({routes.length})
+            Your Rides ({routes.length + receivedRoutes.length})
           </button>
           <button
             onClick={() => setActiveTab('community')}
@@ -172,8 +217,89 @@ const Dashboard: React.FC = () => {
 
         {/* Rides Tab */}
         {activeTab === 'rides' && (
-          <div className="space-y-6">
-            {routes.length === 0 ? (
+          <div className="space-y-8">
+            {/* User's Own Routes */}
+            {routes.length > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Your Routes</h2>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {routes.map((route) => (
+                    <div key={route.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="text-lg font-semibold">{route.name}</h3>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          route.privacy === 'public' 
+                            ? 'bg-green-900 text-green-300' 
+                            : 'bg-gray-700 text-gray-300'
+                        }`}>
+                          {route.privacy}
+                        </span>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="font-medium">{formatDistance(route.distance)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Duration:</span>
+                          <span className="font-medium">{formatDuration(route.duration)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Date:</span>
+                          <span className="font-medium">{formatDate(route.start_time)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Received Routes */}
+            {receivedRoutes.length > 0 && (
+              <div>
+                <h2 className="text-xl font-semibold mb-4">Routes Shared with You</h2>
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                  {receivedRoutes.map((route) => (
+                    <div key={route.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                      <div className="flex items-start justify-between mb-4">
+                        <h3 className="text-lg font-semibold">{route.name}</h3>
+                        <span className="px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-300">
+                          Shared
+                        </span>
+                      </div>
+                      
+                      {route.sender && (
+                        <div className="mb-3 p-2 bg-blue-900/20 rounded border border-blue-800">
+                          <p className="text-sm text-blue-300">
+                            From: <span className="font-medium">{route.sender.name}</span>
+                          </p>
+                        </div>
+                      )}
+                      
+                      <div className="space-y-3">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Distance:</span>
+                          <span className="font-medium">{formatDistance(route.distance)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Duration:</span>
+                          <span className="font-medium">{formatDuration(route.duration)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-400">Date:</span>
+                          <span className="font-medium">{formatDate(route.start_time)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Empty State */}
+            {routes.length === 0 && receivedRoutes.length === 0 && (
               <div className="text-center py-12">
                 <div className="text-gray-400 mb-4">
                   <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -182,38 +308,6 @@ const Dashboard: React.FC = () => {
                 </div>
                 <h3 className="text-lg font-medium text-gray-300 mb-2">No rides yet</h3>
                 <p className="text-gray-500">Your rides from your phone will appear here</p>
-              </div>
-            ) : (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                {routes.map((route) => (
-                  <div key={route.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800">
-                    <div className="flex items-start justify-between mb-4">
-                      <h3 className="text-lg font-semibold">{route.name}</h3>
-                      <span className={`px-2 py-1 text-xs rounded-full ${
-                        route.privacy === 'public' 
-                          ? 'bg-green-900 text-green-300' 
-                          : 'bg-gray-700 text-gray-300'
-                      }`}>
-                        {route.privacy}
-                      </span>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Distance:</span>
-                        <span className="font-medium">{formatDistance(route.distance)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Duration:</span>
-                        <span className="font-medium">{formatDuration(route.duration)}</span>
-                      </div>
-                      <div className="flex justify-between text-sm">
-                        <span className="text-gray-400">Date:</span>
-                        <span className="font-medium">{formatDate(route.start_time)}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
               </div>
             )}
           </div>

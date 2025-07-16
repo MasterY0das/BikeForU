@@ -43,6 +43,10 @@ const DatabaseDebug: React.FC = () => {
       func: () => user ? DatabaseService.getUserRoutes(user.id) : Promise.reject('No user logged in')
     },
     {
+      name: 'Get Received Routes',
+      func: () => user ? DatabaseService.getReceivedRoutes(user.id) : Promise.reject('No user logged in')
+    },
+    {
       name: 'Get User Friends',
       func: () => user ? DatabaseService.getUserFriends(user.id) : Promise.reject('No user logged in')
     },
@@ -131,10 +135,11 @@ const DatabaseDebug: React.FC = () => {
             <p>2. <strong>Get Public Routes</strong> - Shows public routes from the routes table</p>
             <p>3. <strong>Get User Profile</strong> - Shows your profile data (requires login)</p>
             <p>4. <strong>Get User Routes</strong> - Shows your routes (requires login)</p>
-            <p>5. <strong>Get User Friends</strong> - Shows your friends (requires login)</p>
-            <p>6. <strong>Get Pending Friend Requests</strong> - Shows pending friend requests (requires login)</p>
-            <p>7. <strong>Create Test Profile</strong> - Creates a test profile for you (requires login)</p>
-            <p>8. <strong>Create Test Route</strong> - Creates a test route for you (requires login)</p>
+            <p>5. <strong>Get Received Routes</strong> - Shows routes shared with you (requires login)</p>
+            <p>6. <strong>Get User Friends</strong> - Shows your friends (requires login)</p>
+            <p>7. <strong>Get Pending Friend Requests</strong> - Shows pending friend requests (requires login)</p>
+            <p>8. <strong>Create Test Profile</strong> - Creates a test profile for you (requires login)</p>
+            <p>9. <strong>Create Test Route</strong> - Creates a test route for you (requires login)</p>
           </div>
         </div>
       </div>

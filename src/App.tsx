@@ -6,6 +6,8 @@ import Signup from './pages/Signup';
 import Dashboard from './pages/Dashboard';
 import EmailVerification from './pages/EmailVerification';
 import EmailVerificationPending from './pages/EmailVerificationPending';
+import VerificationPending from './pages/VerificationPending';
+import Onboarding from './pages/Onboarding';
 import PasswordReset from './pages/PasswordReset';
 import ForgotPassword from './pages/ForgotPassword';
 import Profile from './pages/Profile';
@@ -24,7 +26,8 @@ const App: React.FC = () => {
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
-          <Route path="/verification-pending" element={<EmailVerificationPending />} />
+          <Route path="/verification-pending" element={<VerificationPending />} />
+          <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/debug" element={<DatabaseDebug />} />
           <Route 
