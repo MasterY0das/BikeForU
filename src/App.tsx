@@ -8,6 +8,8 @@ import EmailVerification from './pages/EmailVerification';
 import EmailVerificationPending from './pages/EmailVerificationPending';
 import PasswordReset from './pages/PasswordReset';
 import ForgotPassword from './pages/ForgotPassword';
+import Profile from './pages/Profile';
+import DatabaseDebug from './components/DatabaseDebug';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 import { AuthProvider } from './contexts/AuthContext';
@@ -21,8 +23,10 @@ const App: React.FC = () => {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="/verification-pending" element={<EmailVerificationPending />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/debug" element={<DatabaseDebug />} />
           <Route 
             path="/verify" 
             element={
