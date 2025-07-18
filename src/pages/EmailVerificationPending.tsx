@@ -40,11 +40,12 @@ const EmailVerificationPending: React.FC = () => {
 
         console.log('Current user state:', user);
 
-        // If user is verified, redirect to onboarding
+        // If user is verified, redirect
         if (user?.email_confirmed_at) {
-          console.log('User verified, redirecting to onboarding...');
+          console.log('User verified, redirecting to login...');
           clearInterval(checkInterval);
-          navigate('/onboarding');
+          sessionStorage.setItem('showVerificationSuccess', 'true');
+          navigate('/login');
         }
       } catch (err) {
         console.error('Error checking verification status:', err);
@@ -117,8 +118,6 @@ const EmailVerificationPending: React.FC = () => {
           Please check your inbox and click the verification link to continue.
           <br />
           <span className="text-sm">This page will automatically redirect you once verified.</span>
-          <br />
-          <span className="text-sm mt-2 block">After verification, you'll be redirected to complete your profile setup.</span>
         </p>
         <div className="space-y-4">
           <button

@@ -129,19 +129,19 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
-          <p>Loading your dashboard...</p>
+          <div className="animate-spin h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+          <p>Loading your adventure dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-green-900 text-white">
       {/* Navigation with Profile */}
-      <nav className="bg-gray-900 border-b border-gray-800">
+      <nav className="bg-black/20 backdrop-blur-sm border-b border-green-700/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
@@ -159,10 +159,10 @@ const Dashboard: React.FC = () => {
                       <img 
                         src={profile.avatar_url} 
                         alt={profile.name}
-                        className="w-8 h-8 rounded-full"
+                        className="w-8 h-8"
                       />
                     ) : (
-                      <div className="w-8 h-8 bg-gray-700 rounded-full flex items-center justify-center">
+                      <div className="w-8 h-8 bg-green-700 flex items-center justify-center">
                         <span className="text-sm font-medium">
                           {profile.name?.charAt(0) || 'U'}
                         </span>
@@ -171,14 +171,14 @@ const Dashboard: React.FC = () => {
                   </div>
                   <div className="hidden md:block">
                     <p className="text-sm font-medium">{profile.name}</p>
-                    <p className="text-xs text-gray-400">@{profile.username}</p>
+                    <p className="text-xs text-green-200">@{profile.username}</p>
                   </div>
                 </div>
               )}
               
               <Link 
                 to="/profile" 
-                className="text-gray-300 hover:text-white transition-colors"
+                className="text-green-200 hover:text-white transition-colors"
               >
                 Profile & Settings
               </Link>
@@ -189,29 +189,29 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold mb-8">Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-8">Your Adventure Hub</h1>
         
         {/* Tab Navigation */}
-        <div className="flex space-x-1 bg-gray-900 rounded-lg p-1 mb-8">
+        <div className="flex space-x-1 bg-green-900/30 p-1 mb-8 border border-green-700/30">
           <button
             onClick={() => setActiveTab('rides')}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
               activeTab === 'rides'
-                ? 'bg-white text-black'
-                : 'text-gray-300 hover:text-white'
+                ? 'bg-green-600 text-white'
+                : 'text-green-200 hover:text-white'
             }`}
           >
-            Your Rides ({routes.length + receivedRoutes.length})
+            Your Epic Rides ({routes.length + receivedRoutes.length})
           </button>
           <button
             onClick={() => setActiveTab('community')}
-            className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+            className={`flex-1 py-2 px-4 text-sm font-medium transition-colors ${
               activeTab === 'community'
-                ? 'bg-white text-black'
-                : 'text-gray-300 hover:text-white'
+                ? 'bg-green-600 text-white'
+                : 'text-green-200 hover:text-white'
             }`}
           >
-            Friends ({friends.length})
+            Your Squad ({friends.length})
           </button>
         </div>
 
@@ -221,16 +221,16 @@ const Dashboard: React.FC = () => {
             {/* User's Own Routes */}
             {routes.length > 0 && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Your Routes</h2>
+                <h2 className="text-xl font-semibold mb-4">Your Epic Routes</h2>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {routes.map((route) => (
-                    <div key={route.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                    <div key={route.id} className="bg-green-900/30 p-6 border border-green-700/30 hover:bg-green-900/50 transition-all duration-300 transform hover:scale-105">
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold">{route.name}</h3>
-                        <span className={`px-2 py-1 text-xs rounded-full ${
+                        <span className={`px-2 py-1 text-xs ${
                           route.privacy === 'public' 
-                            ? 'bg-green-900 text-green-300' 
-                            : 'bg-gray-700 text-gray-300'
+                            ? 'bg-green-600 text-white' 
+                            : 'bg-green-800/50 text-green-200'
                         }`}>
                           {route.privacy}
                         </span>
@@ -238,18 +238,25 @@ const Dashboard: React.FC = () => {
                       
                       <div className="space-y-3">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-green-200">Distance:</span>
                           <span className="font-medium">{formatDistance(route.distance)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-400">Duration:</span>
+                          <span className="text-green-200">Duration:</span>
                           <span className="font-medium">{formatDuration(route.duration)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-400">Date:</span>
+                          <span className="text-green-200">Date:</span>
                           <span className="font-medium">{formatDate(route.start_time)}</span>
                         </div>
                       </div>
+                      
+                      <button
+                        onClick={() => handleRouteClick(route)}
+                        className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 font-medium transition-colors"
+                      >
+                        View Details
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -259,39 +266,44 @@ const Dashboard: React.FC = () => {
             {/* Received Routes */}
             {receivedRoutes.length > 0 && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Routes Shared with You</h2>
+                <h2 className="text-xl font-semibold mb-4">Routes Shared With You</h2>
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                   {receivedRoutes.map((route) => (
-                    <div key={route.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800">
+                    <div key={route.id} className="bg-green-900/30 p-6 border border-green-700/30 hover:bg-green-900/50 transition-all duration-300 transform hover:scale-105">
                       <div className="flex items-start justify-between mb-4">
                         <h3 className="text-lg font-semibold">{route.name}</h3>
-                        <span className="px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-300">
-                          Shared
+                        <span className="px-2 py-1 text-xs bg-green-600 text-white">
+                          shared
                         </span>
                       </div>
                       
                       {route.sender && (
-                        <div className="mb-3 p-2 bg-blue-900/20 rounded border border-blue-800">
-                          <p className="text-sm text-blue-300">
-                            From: <span className="font-medium">{route.sender.name}</span>
-                          </p>
+                        <div className="mb-3 text-sm text-green-200">
+                          Shared by: {route.sender.name}
                         </div>
                       )}
                       
                       <div className="space-y-3">
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-400">Distance:</span>
+                          <span className="text-green-200">Distance:</span>
                           <span className="font-medium">{formatDistance(route.distance)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-400">Duration:</span>
+                          <span className="text-green-200">Duration:</span>
                           <span className="font-medium">{formatDuration(route.duration)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-gray-400">Date:</span>
+                          <span className="text-green-200">Date:</span>
                           <span className="font-medium">{formatDate(route.start_time)}</span>
                         </div>
                       </div>
+                      
+                      <button
+                        onClick={() => handleRouteClick(route)}
+                        className="mt-4 w-full bg-green-600 hover:bg-green-700 text-white py-2 font-medium transition-colors"
+                      >
+                        View Details
+                      </button>
                     </div>
                   ))}
                 </div>
@@ -301,13 +313,14 @@ const Dashboard: React.FC = () => {
             {/* Empty State */}
             {routes.length === 0 && receivedRoutes.length === 0 && (
               <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-1.447-.894L15 4m0 13V4m-6 3l6-3" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-300 mb-2">No rides yet</h3>
-                <p className="text-gray-500">Your rides from your phone will appear here</p>
+                <h3 className="text-xl font-semibold mb-2">No rides yet!</h3>
+                <p className="text-green-200 mb-4">Start your adventure by recording your first ride.</p>
+                <Link
+                  to="/profile"
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 font-semibold transition-colors inline-block transform hover:scale-105"
+                >
+                  Start Riding
+                </Link>
               </div>
             )}
           </div>
@@ -315,30 +328,22 @@ const Dashboard: React.FC = () => {
 
         {/* Community Tab */}
         {activeTab === 'community' && (
-          <div className="space-y-6">
-            {friends.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-400 mb-4">
-                  <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                  </svg>
-                </div>
-                <h3 className="text-lg font-medium text-gray-300 mb-2">No friends yet</h3>
-                <p className="text-gray-500">Connect with other bikers to see them here</p>
-              </div>
-            ) : (
+          <div className="space-y-8">
+            <h2 className="text-xl font-semibold mb-4">Your Adventure Squad</h2>
+            
+            {friends.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {friends.map((friend) => (
-                  <div key={friend.id} className="bg-gray-900 rounded-lg p-6 border border-gray-800">
-                    <div className="flex items-center space-x-4 mb-4">
+                  <div key={friend.id} className="bg-green-900/30 p-6 border border-green-700/30 hover:bg-green-900/50 transition-all duration-300 transform hover:scale-105">
+                    <div className="flex items-center space-x-3 mb-4">
                       {friend.avatar_url ? (
                         <img 
                           src={friend.avatar_url} 
                           alt={friend.name}
-                          className="w-12 h-12 rounded-full"
+                          className="w-12 h-12"
                         />
                       ) : (
-                        <div className="w-12 h-12 bg-gray-700 rounded-full flex items-center justify-center">
+                        <div className="w-12 h-12 bg-green-700 flex items-center justify-center">
                           <span className="text-lg font-medium">
                             {friend.name?.charAt(0) || 'U'}
                           </span>
@@ -346,37 +351,126 @@ const Dashboard: React.FC = () => {
                       )}
                       <div>
                         <h3 className="font-semibold">{friend.name}</h3>
-                        <p className="text-sm text-gray-400">@{friend.username}</p>
+                        <p className="text-sm text-green-200">@{friend.username}</p>
                       </div>
                     </div>
                     
                     {friend.interests && friend.interests.length > 0 && (
-                      <div>
-                        <p className="text-sm text-gray-400 mb-2">Interests:</p>
+                      <div className="mb-4">
+                        <p className="text-sm text-green-200 mb-2">Interests:</p>
                         <div className="flex flex-wrap gap-1">
                           {friend.interests.slice(0, 3).map((interest, index) => (
                             <span 
                               key={index}
-                              className="px-2 py-1 bg-gray-800 text-xs rounded-full"
+                              className="px-2 py-1 text-xs bg-green-600/50 text-green-200"
                             >
                               {interest}
                             </span>
                           ))}
                           {friend.interests.length > 3 && (
-                            <span className="px-2 py-1 bg-gray-800 text-xs rounded-full">
+                            <span className="px-2 py-1 text-xs bg-green-600/50 text-green-200">
                               +{friend.interests.length - 3} more
                             </span>
                           )}
                         </div>
                       </div>
                     )}
+                    
+                    <button className="w-full bg-green-600 hover:bg-green-700 text-white py-2 font-medium transition-colors">
+                      View Profile
+                    </button>
                   </div>
                 ))}
+              </div>
+            ) : (
+              <div className="text-center py-12">
+                <h3 className="text-xl font-semibold mb-2">No friends yet!</h3>
+                <p className="text-green-200 mb-4">Connect with other adventure seekers to build your squad.</p>
+                <Link
+                  to="/profile"
+                  className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 font-semibold transition-colors inline-block transform hover:scale-105"
+                >
+                  Find Friends
+                </Link>
               </div>
             )}
           </div>
         )}
       </main>
+
+      {/* Route Detail Modal */}
+      {showRouteDetail && selectedRoute && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <div className="bg-green-900/95 backdrop-blur-sm border border-green-700/30 max-w-2xl w-full max-h-[80vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-bold">{selectedRoute.name}</h2>
+                <button
+                  onClick={handleBackToRoutes}
+                  className="text-green-200 hover:text-white transition-colors"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="bg-green-800/30 p-4 border border-green-700/30">
+                  <p className="text-green-200 text-sm">Distance</p>
+                  <p className="text-xl font-semibold">{formatDistance(selectedRoute.distance)}</p>
+                </div>
+                <div className="bg-green-800/30 p-4 border border-green-700/30">
+                  <p className="text-green-200 text-sm">Duration</p>
+                  <p className="text-xl font-semibold">{formatDuration(selectedRoute.duration)}</p>
+                </div>
+                <div className="bg-green-800/30 p-4 border border-green-700/30">
+                  <p className="text-green-200 text-sm">Start Time</p>
+                  <p className="text-xl font-semibold">{new Date(selectedRoute.start_time).toLocaleString()}</p>
+                </div>
+                <div className="bg-green-800/30 p-4 border border-green-700/30">
+                  <p className="text-green-200 text-sm">End Time</p>
+                  <p className="text-xl font-semibold">{new Date(selectedRoute.end_time).toLocaleString()}</p>
+                </div>
+              </div>
+              
+              <div className="mb-6">
+                <h3 className="text-lg font-semibold mb-3">Messages</h3>
+                {routeMessages.length > 0 ? (
+                  <div className="space-y-3">
+                    {routeMessages.map((message) => (
+                      <div key={message.id} className="bg-green-800/30 p-3 border border-green-700/30">
+                        <div className="flex items-center space-x-2 mb-2">
+                          {message.sender?.avatar_url ? (
+                            <img 
+                              src={message.sender.avatar_url} 
+                              alt={message.sender.name}
+                              className="w-6 h-6"
+                            />
+                          ) : (
+                            <div className="w-6 h-6 bg-green-700 flex items-center justify-center">
+                              <span className="text-xs font-medium">
+                                {message.sender?.name?.charAt(0) || 'U'}
+                              </span>
+                            </div>
+                          )}
+                          <span className="font-medium text-sm">{message.sender?.name || 'Unknown'}</span>
+                          <span className="text-xs text-green-200">
+                            {new Date(message.created_at).toLocaleString()}
+                          </span>
+                        </div>
+                        <p className="text-sm">{message.text}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-green-200">No messages yet.</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

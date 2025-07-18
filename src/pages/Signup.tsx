@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../lib/supabase';
-import { DatabaseService } from '../lib/database';
 
 const Signup: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -16,9 +15,6 @@ const Signup: React.FC = () => {
     setLoading(true);
     setError('');
 
-    console.log('🚀 Starting signup process...');
-    console.log('📝 Form data:', { email, password: '***' });
-
     if (password !== confirmPassword) {
       setError('Passwords do not match');
       setLoading(false);
@@ -26,63 +22,56 @@ const Signup: React.FC = () => {
     }
 
     try {
-      console.log('👤 Creating user account...');
-      // Simple signup with Supabase's built-in auth
+      // First, sign out any existing session
+      await supabase.auth.signOut();
+
+      // Sign up the user with email verification required
       const { data, error: signUpError } = await supabase.auth.signUp({
         email,
-        password
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/verify`,
+          data: {
+            email_confirmed: false
+          }
+        },
       });
 
-      console.log('📊 Signup response:', { data, error: signUpError });
-
-      if (signUpError) {
-        console.error('❌ Signup error:', signUpError);
-        throw signUpError;
-      }
+      if (signUpError) throw signUpError;
 
       // Check if we got a user back
       if (!data?.user) {
-        console.error('❌ No user data returned');
         throw new Error('Failed to create account');
       }
 
-      console.log('✅ User created successfully:', data.user.id);
+      // Immediately sign out to prevent auto-login
+      await supabase.auth.signOut();
 
-      console.log('💾 Storing data in session...');
-      // Store email for onboarding
+      // Store email in sessionStorage for verification pending page
       sessionStorage.setItem('pendingVerificationEmail', email);
-      sessionStorage.setItem('pendingUserId', data.user.id);
-      console.log('✅ Session data stored');
+      // Set a flag to show success message on login page
+      sessionStorage.setItem('showVerificationSuccess', 'true');
 
-      console.log('🧭 Navigating to verification page...');
-      // Navigate to verification pending page
-      navigate('/verification-pending');
-      console.log('✅ Navigation completed');
+      // Force a page reload to clear any cached auth state
+      window.location.href = '/verification-pending';
     } catch (error: any) {
-      console.error('💥 Signup process failed:', error);
-      console.error('Error details:', {
-        message: error.message,
-        code: error.code,
-        status: error.status,
-        details: error.details
-      });
-      setError(`Signup failed: ${error.message}`);
+      setError(error.message);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
       <div className="max-w-md w-full mx-4">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2">Create Account</h1>
-          <p className="text-gray-400">Join the BikeForU community</p>
+          <h1 className="text-4xl font-bold mb-2">Join the Adventure!</h1>
+          <p className="text-green-200">Ready to CRUSH your fitness goals?</p>
         </div>
 
         <form onSubmit={handleSignup} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="email" className="block text-sm font-medium text-green-200 mb-2">
               Email
             </label>
             <input
@@ -90,13 +79,13 @@ const Signup: React.FC = () => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
+              className="w-full px-4 py-3 bg-green-900/50 border border-green-700 focus:outline-none focus:border-green-400 text-white"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-green-200 mb-2">
               Password
             </label>
             <input
@@ -104,13 +93,13 @@ const Signup: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
+              className="w-full px-4 py-3 bg-green-900/50 border border-green-700 focus:outline-none focus:border-green-400 text-white"
               required
             />
           </div>
 
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
+            <label htmlFor="confirmPassword" className="block text-sm font-medium text-green-200 mb-2">
               Confirm Password
             </label>
             <input
@@ -118,38 +107,28 @@ const Signup: React.FC = () => {
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
+              className="w-full px-4 py-3 bg-green-900/50 border border-green-700 focus:outline-none focus:border-green-400 text-white"
               required
             />
           </div>
 
           {error && (
-            <div className="bg-red-900 border border-red-700 rounded-lg p-4 mb-4">
-              <h3 className="text-red-200 font-semibold mb-2">Signup Error</h3>
-              <p className="text-red-300 text-sm">{error}</p>
-              <details className="mt-2">
-                <summary className="text-red-400 text-xs cursor-pointer">Show Debug Info</summary>
-                <div className="mt-2 p-2 bg-red-800 rounded text-xs text-red-200">
-                  <p>Check browser console (F12) for detailed error logs</p>
-                  <p>Form data: {JSON.stringify({ email, hasPassword: !!password })}</p>
-                </div>
-              </details>
-            </div>
+            <p className="text-red-400 text-sm">{error}</p>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
+            className="w-full bg-green-600 text-white px-6 py-3 font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 transform hover:scale-105"
           >
-            {loading ? 'Creating Account...' : 'Create Account'}
+            {loading ? 'Creating Account...' : 'Start Your Journey!'}
           </button>
         </form>
 
         <div className="mt-8 text-center">
-          <p className="text-gray-400">
+          <p className="text-green-200">
             Already have an account?{' '}
-            <Link to="/login" className="text-blue-400 hover:text-blue-300">
+            <Link to="/login" className="text-green-400 hover:text-green-300">
               Sign in
             </Link>
           </p>

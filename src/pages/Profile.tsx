@@ -31,9 +31,6 @@ const Profile: React.FC = () => {
     colour: 'dark'
   });
 
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-
   useEffect(() => {
     if (user) {
       loadProfile();
@@ -55,7 +52,6 @@ const Profile: React.FC = () => {
           interests: userProfile.interests || [],
           colour: userProfile.colour || 'dark'
         });
-        setImagePreview(userProfile.avatar_url);
       }
     } catch (error) {
       console.error('Error loading profile:', error);
@@ -72,9 +68,7 @@ const Profile: React.FC = () => {
     setError(null);
     
     try {
-      // Don't include username in updates since it's read-only
-      const { username, ...updateData } = formData;
-      const updatedProfile = await DatabaseService.updateUserProfile(user.id, updateData);
+      const updatedProfile = await DatabaseService.updateUserProfile(user.id, formData);
       if (updatedProfile) {
         setProfile(updatedProfile);
         setEditing(false);
@@ -101,27 +95,9 @@ const Profile: React.FC = () => {
     }
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        setImagePreview(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const removeImage = () => {
-    setSelectedImage(null);
-    setImagePreview(null);
-    setFormData(prev => ({ ...prev, avatar_url: '' }));
-  };
-
   const availableInterests = [
-    'Road Cycling', 'Mountain Biking', 'Cycling', 'Running', 'Trekking', 
-    'Walking', 'Hiking', 'Trail Running', 'Gravel Cycling', 'BMX'
+    'Road Cycling', 'Mountain Biking', 'Cycling', 'Biking', 'Hiking', 
+    'Running', 'Walking', 'Fitness', 'Adventure', 'Nature'
   ];
 
   if (loading) {
@@ -184,11 +160,11 @@ const Profile: React.FC = () => {
               <div className="grid md:grid-cols-2 gap-6">
                 {/* Avatar */}
                 <div className="flex items-center space-x-4">
-                  {imagePreview || profile.avatar_url ? (
+                  {profile.avatar_url ? (
                     <img 
-                      src={imagePreview || profile.avatar_url || ''} 
+                      src={profile.avatar_url} 
                       alt={profile.name}
-                      className="w-20 h-20 rounded-full object-cover"
+                      className="w-20 h-20 rounded-full"
                     />
                   ) : (
                     <div className="w-20 h-20 bg-gray-700 rounded-full flex items-center justify-center">
@@ -200,30 +176,13 @@ const Profile: React.FC = () => {
                   <div>
                     <p className="text-sm text-gray-400">Profile Picture</p>
                     {editing && (
-                      <div className="mt-2 space-y-2">
-                        <input
-                          type="file"
-                          accept="image/*"
-                          onChange={handleImageUpload}
-                          className="hidden"
-                          id="avatar-upload"
-                        />
-                        <label 
-                          htmlFor="avatar-upload"
-                          className="block w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg cursor-pointer hover:bg-gray-700 transition-colors text-center"
-                        >
-                          Choose Image
-                        </label>
-                        {(imagePreview || profile.avatar_url) && (
-                          <button
-                            type="button"
-                            onClick={removeImage}
-                            className="w-full px-3 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition-colors text-sm"
-                          >
-                            Remove Image
-                          </button>
-                        )}
-                      </div>
+                      <input
+                        type="url"
+                        placeholder="Avatar URL"
+                        value={formData.avatar_url}
+                        onChange={(e) => setFormData(prev => ({ ...prev, avatar_url: e.target.value }))}
+                        className="mt-2 w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                      />
                     )}
                   </div>
                 </div>
@@ -250,8 +209,16 @@ const Profile: React.FC = () => {
                     <label className="block text-sm font-medium text-gray-300 mb-2">
                       Username
                     </label>
-                    <p className="text-lg">@{profile.username}</p>
-                    <p className="text-xs text-gray-500 mt-1">Username cannot be changed</p>
+                    {editing ? (
+                      <input
+                        type="text"
+                        value={formData.username}
+                        onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                        className="w-full px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500"
+                      />
+                    ) : (
+                      <p className="text-lg">@{profile.username}</p>
+                    )}
                   </div>
                 </div>
               </div>
