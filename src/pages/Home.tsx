@@ -1,11 +1,23 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 const Home: React.FC = () => {
+  const { isLoggedIn } = useAuth();
   const [scrollY, setScrollY] = useState(0);
   const [currentScene, setCurrentScene] = useState(0);
   const [animationComplete, setAnimationComplete] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // Reset animation state when component mounts (page loads)
+  useEffect(() => {
+    setScrollY(0);
+    setCurrentScene(0);
+    setAnimationComplete(false);
+    
+    // Scroll to top to ensure animation starts from beginning
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -246,7 +258,7 @@ const Home: React.FC = () => {
                 <nav className="hidden md:flex space-x-8">
                   <a href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
                   <a href="#about" className="text-gray-600 hover:text-gray-900 transition-colors">About</a>
-                  <a href="#contact" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</a>
+                  <Link to="/contact" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</Link>
                 </nav>
                 <div className="flex space-x-4">
                   <Link
@@ -338,6 +350,83 @@ const Home: React.FC = () => {
             </div>
           </section>
 
+          {/* Image Gallery Section */}
+          <section className="py-20 px-4 bg-gray-50">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-4xl font-bold text-gray-900 text-center mb-16">
+                Real Adventures, Real People
+              </h2>
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div className="group overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <img 
+                    src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                    alt="Mountain biking adventure"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Mountain Trails</h3>
+                    <p className="text-gray-600">Conquer challenging mountain trails with your adventure squad</p>
+                  </div>
+                </div>
+                <div className="group overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <img 
+                    src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                    alt="Road cycling"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Road Adventures</h3>
+                    <p className="text-gray-600">Explore scenic routes and push your limits on the open road</p>
+                  </div>
+                </div>
+                <div className="group overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <img 
+                    src="https://images.unsplash.com/photo-1551698618-1dfe5d97d256?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                    alt="Running in nature"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Trail Running</h3>
+                    <p className="text-gray-600">Discover hidden trails and connect with nature on foot</p>
+                  </div>
+                </div>
+                <div className="group overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <img 
+                    src="https://images.unsplash.com/photo-1517649763962-0c623066013b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                    alt="Group cycling"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Group Rides</h3>
+                    <p className="text-gray-600">Join group rides and build lasting friendships</p>
+                  </div>
+                </div>
+                <div className="group overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <img 
+                    src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                    alt="Sunset cycling"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Sunset Rides</h3>
+                    <p className="text-gray-600">Experience magical moments on evening adventures</p>
+                  </div>
+                </div>
+                <div className="group overflow-hidden bg-white shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <img 
+                    src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80" 
+                    alt="Adventure planning"
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">Plan Adventures</h3>
+                    <p className="text-gray-600">Plan epic adventures and share routes with your community</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* CTA Section */}
           <section className="py-20 px-4 bg-gradient-to-br from-green-50 to-green-100">
             <div className="max-w-4xl mx-auto text-center">
@@ -384,7 +473,7 @@ const Home: React.FC = () => {
                   <h3 className="text-white font-semibold mb-4">Support</h3>
                   <ul className="space-y-2">
                     <li><a href="#help" className="text-gray-300 hover:text-white transition-colors">Help Center</a></li>
-                    <li><a href="#contact" className="text-gray-300 hover:text-white transition-colors">Contact Us</a></li>
+                    <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact Us</Link></li>
                     <li><a href="#feedback" className="text-gray-300 hover:text-white transition-colors">Feedback</a></li>
                   </ul>
                 </div>

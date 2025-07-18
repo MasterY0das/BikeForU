@@ -54,6 +54,24 @@ export const DatabaseService = {
     }
   },
 
+  // Search users by username (case-sensitive)
+  async searchUsersByUsername(username: string, currentUserId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .ilike('username', `%${username}%`)
+        .neq('id', currentUserId)
+        .limit(10);
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error searching users:', error);
+      return null;
+    }
+  },
+
   // Get user routes (matches your routes table)
   async getUserRoutes(userId: string) {
     try {
@@ -165,6 +183,151 @@ export const DatabaseService = {
     }
   },
 
+  // Get pending friend requests (sent to the user)
+  async getPendingFriendRequests(userId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('friend_requests')
+        .select(`
+          *,
+          sender:profiles!sender_id (
+            id,
+            name,
+            username,
+            avatar_url,
+            interests
+          )
+        `)
+        .eq('receiver_id', userId)
+        .eq('status', 'pending');
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error getting pending friend requests:', error);
+      return null;
+    }
+  },
+
+  // Get sent friend requests (sent by the user)
+  async getSentFriendRequests(userId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('friend_requests')
+        .select(`
+          *,
+          receiver:profiles!receiver_id (
+            id,
+            name,
+            username,
+            avatar_url,
+            interests
+          )
+        `)
+        .eq('sender_id', userId)
+        .eq('status', 'pending');
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error getting sent friend requests:', error);
+      return null;
+    }
+  },
+
+  // Send a friend request
+  async sendFriendRequest(senderId: string, receiverId: string) {
+    try {
+      // Check if request already exists
+      const { data: existingRequest } = await supabase
+        .from('friend_requests')
+        .select('*')
+        .or(`and(sender_id.eq.${senderId},receiver_id.eq.${receiverId}),and(sender_id.eq.${receiverId},receiver_id.eq.${senderId})`)
+        .single();
+
+      if (existingRequest) {
+        throw new Error('Friend request already exists');
+      }
+
+      const { data, error } = await supabase
+        .from('friend_requests')
+        .insert({
+          sender_id: senderId,
+          receiver_id: receiverId,
+          status: 'pending',
+          created_at: new Date().toISOString()
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error sending friend request:', error);
+      throw error;
+    }
+  },
+
+  // Accept a friend request
+  async acceptFriendRequest(requestId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('friend_requests')
+        .update({
+          status: 'accepted',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error accepting friend request:', error);
+      throw error;
+    }
+  },
+
+  // Reject a friend request
+  async rejectFriendRequest(requestId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('friend_requests')
+        .update({
+          status: 'rejected',
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', requestId)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error rejecting friend request:', error);
+      throw error;
+    }
+  },
+
+  // Cancel a sent friend request
+  async cancelFriendRequest(requestId: string) {
+    try {
+      const { data, error } = await supabase
+        .from('friend_requests')
+        .delete()
+        .eq('id', requestId)
+        .select()
+        .single();
+      
+      if (error) throw error;
+      return data;
+    } catch (error) {
+      console.error('Error canceling friend request:', error);
+      throw error;
+    }
+  },
+
   // Get messages for a specific route
   async getRouteMessages(routeId: string) {
     try {
@@ -243,70 +406,6 @@ export const DatabaseService = {
     }
   },
 
-  // Get pending friend requests
-  async getPendingFriendRequests(userId: string) {
-    try {
-      const { data, error } = await supabase
-        .from('friend_requests')
-        .select(`
-          *,
-          sender:profiles!sender_id (
-            id,
-            name,
-            username,
-            avatar_url
-          )
-        `)
-        .eq('receiver_id', userId)
-        .eq('status', 'pending');
-      
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Error getting pending friend requests:', error);
-      return null;
-    }
-  },
-
-  // Send friend request
-  async sendFriendRequest(senderId: string, receiverId: string) {
-    try {
-      const { data, error } = await supabase
-        .from('friend_requests')
-        .insert({
-          sender_id: senderId,
-          receiver_id: receiverId,
-          status: 'pending'
-        })
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Error sending friend request:', error);
-      return null;
-    }
-  },
-
-  // Accept friend request
-  async acceptFriendRequest(requestId: string) {
-    try {
-      const { data, error } = await supabase
-        .from('friend_requests')
-        .update({ status: 'accepted' })
-        .eq('id', requestId)
-        .select()
-        .single();
-      
-      if (error) throw error;
-      return data;
-    } catch (error) {
-      console.error('Error accepting friend request:', error);
-      return null;
-    }
-  },
-
   // Update user profile
   async updateUserProfile(userId: string, updates: {
     name?: string;
@@ -330,11 +429,11 @@ export const DatabaseService = {
       return data;
     } catch (error) {
       console.error('Error updating user profile:', error);
-      return null;
+      throw error;
     }
   },
 
-  // Create test profile (for debugging)
+  // Create test profile
   async createTestProfile(userId: string) {
     try {
       const { data, error } = await supabase
@@ -342,10 +441,10 @@ export const DatabaseService = {
         .insert({
           id: userId,
           name: 'Test User',
-          username: `user_${userId.slice(0, 8)}`,
-          interests: ['Road Cycling', 'Mountain Biking', 'Cycling', 'Biking', 'Hiking', 'Running', 'Walking', 'Fitness', 'Adventure', 'Nature'],
-          colour: 'dark',
+          username: 'testuser',
           avatar_url: null,
+          interests: ['Cycling', 'Running'],
+          colour: 'dark',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
@@ -353,7 +452,6 @@ export const DatabaseService = {
         .single();
       
       if (error) throw error;
-      console.log('Created test profile:', data);
       return data;
     } catch (error) {
       console.error('Error creating test profile:', error);
@@ -361,30 +459,26 @@ export const DatabaseService = {
     }
   },
 
-  // Create test route (for debugging)
+  // Create test route
   async createTestRoute(userId: string) {
     try {
       const { data, error } = await supabase
         .from('routes')
         .insert({
-          user_id: userId,
           name: 'Test Route',
-          start_time: new Date().toISOString(),
-          end_time: new Date(Date.now() + 3600000).toISOString(), // 1 hour later
           distance: 15.5,
-          duration: 3600, // 1 hour in seconds
-          coordinates: JSON.stringify([
-            { lat: 40.7128, lng: -74.0060 },
-            { lat: 40.7589, lng: -73.9851 }
-          ]),
+          duration: 3600,
+          start_time: new Date().toISOString(),
+          end_time: new Date(Date.now() + 3600000).toISOString(),
           privacy: 'public',
+          user_id: userId,
+          sent: 'none',
           created_at: new Date().toISOString()
         })
         .select()
         .single();
       
       if (error) throw error;
-      console.log('Created test route:', data);
       return data;
     } catch (error) {
       console.error('Error creating test route:', error);
@@ -392,7 +486,7 @@ export const DatabaseService = {
     }
   },
 
-  // Get sample data from a table (for debugging)
+  // Get sample data from a table
   async getSampleData(tableName: string, limit: number = 5) {
     try {
       const { data, error } = await supabase

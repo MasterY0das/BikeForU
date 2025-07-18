@@ -1,82 +1,90 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 import { supabase } from '../lib/supabase';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [showVerificationSuccess, setShowVerificationSuccess] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   useEffect(() => {
-    // Check if we should show the success message
-    const shouldShowSuccess = sessionStorage.getItem('showVerificationSuccess');
-    if (shouldShowSuccess) {
-      setShowSuccess(true);
-      // Remove the flag after showing the message
+    // Check if user just verified their email
+    const showSuccess = sessionStorage.getItem('showVerificationSuccess');
+    if (showSuccess === 'true') {
+      setShowVerificationSuccess(true);
       sessionStorage.removeItem('showVerificationSuccess');
-      // Auto-hide the message after 5 seconds
-      const timer = setTimeout(() => {
-        setShowSuccess(false);
-      }, 5000);
-      return () => clearTimeout(timer);
     }
   }, []);
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError(null);
 
     try {
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (signInError) throw signInError;
-
-      navigate('/dashboard');
+      const result = await login(email, password);
+      
+      if (result.error) {
+        setError(result.error);
+      } else {
+        navigate('/dashboard');
+      }
     } catch (error: any) {
-      setError(error.message);
+      console.error('Login error:', error);
+      setError(error.message || 'Failed to login');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
-      <div className="max-w-md w-full mx-4">
-        {showSuccess && (
-          <div className="mb-6 p-4 bg-green-500/10 border border-green-500/20 text-green-400 text-center animate-fade-in">
-            Your email has been verified! You can now log in to your account.
+    <div className="min-h-screen bg-white text-gray-900 flex items-center justify-center px-4">
+      <div className="max-w-md w-full space-y-8">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-gray-900 mb-2">Welcome Back!</h1>
+          <p className="text-gray-600">Ready to continue your adventure?</p>
+        </div>
+
+        {showVerificationSuccess && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div className="flex items-center">
+              <svg className="w-5 h-5 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+              <p className="text-green-800">Email verified successfully! You can now log in.</p>
+            </div>
           </div>
         )}
 
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2">Welcome Back, Adventurer!</h1>
-          <p className="text-green-200">Ready to CRUSH your next workout?</p>
-        </div>
+        {error && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+            <p className="text-red-600">{error}</p>
+          </div>
+        )}
 
-        <form onSubmit={handleLogin} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-green-200 mb-2">
-              Email
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+              Email Address
             </label>
             <input
               id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-green-900/50 border border-green-700 focus:outline-none focus:border-green-400 text-white"
               required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
+              placeholder="Enter your email"
             />
           </div>
 
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-green-200 mb-2">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
               Password
             </label>
             <input
@@ -84,34 +92,49 @@ const Login: React.FC = () => {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-green-900/50 border border-green-700 focus:outline-none focus:border-green-400 text-white"
               required
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors"
+              placeholder="Enter your password"
             />
           </div>
 
-          {error && (
-            <p className="text-red-400 text-sm">{error}</p>
-          )}
+          <div className="flex items-center justify-between">
+            <Link 
+              to="/forgot-password" 
+              className="text-sm text-green-600 hover:text-green-700 transition-colors"
+            >
+              Forgot your password?
+            </Link>
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 text-white px-6 py-3 font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 transform hover:scale-105"
+            className="w-full btn-primary disabled:opacity-50"
           >
-            {loading ? 'Signing in...' : 'Let\'s GO!'}
+            {loading ? 'Signing In...' : 'Sign In'}
           </button>
         </form>
 
-        <div className="mt-8 text-center space-y-4">
-          <Link to="/forgot-password" className="text-green-400 hover:text-green-300 block">
-            Forgot your password?
-          </Link>
-          <p className="text-green-200">
+        <div className="text-center">
+          <p className="text-gray-600">
             Don't have an account?{' '}
-            <Link to="/signup" className="text-green-400 hover:text-green-300">
-              Join the adventure!
+            <Link 
+              to="/signup" 
+              className="text-green-600 hover:text-green-700 font-medium transition-colors"
+            >
+              Sign up here
             </Link>
           </p>
+        </div>
+
+        <div className="text-center">
+          <Link 
+            to="/" 
+            className="text-gray-500 hover:text-gray-700 transition-colors"
+          >
+            ← Back to Home
+          </Link>
         </div>
       </div>
     </div>
