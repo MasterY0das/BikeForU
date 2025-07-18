@@ -37,17 +37,24 @@ const PasswordReset: React.FC = () => {
           setSessionChecked(true);
           return;
         }
-        console.log('Verifying OTP', { email: emailFromUrl, token, type });
-        const { error } = await supabase.auth.verifyOtp({
-          email: emailFromUrl,
-          token,
-          type,
-        });
-        if (!error) {
-          setHasSession(true);
-        } else {
-          setErrorMessage(error.message);
+        try {
+          const { error } = await supabase.auth.verifyOtp({
+            email: emailFromUrl,
+            token,
+            type,
+          });
+          if (!error) {
+            setHasSession(true);
+          } else {
+            setErrorMessage(error.message);
+            setHasSession(false);
+          }
+        } catch (err) {
+          setErrorMessage('An unexpected error occurred.');
+          setHasSession(false);
         }
+        setSessionChecked(true);
+        return;
       }
       setSessionChecked(true);
     }
