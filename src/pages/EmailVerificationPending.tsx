@@ -9,7 +9,6 @@ const EmailVerificationPending: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get the stored email
     const storedEmail = sessionStorage.getItem('pendingVerificationEmail');
     if (!storedEmail) {
       navigate('/signup');
@@ -18,41 +17,28 @@ const EmailVerificationPending: React.FC = () => {
     setEmail(storedEmail);
     setLoading(false);
 
-    // Set up interval to check verification status
     const checkInterval = setInterval(async () => {
       try {
-        // Check auth state directly
         const { data: { session }, error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
-          console.error('Session error:', sessionError);
           return;
         }
 
-        console.log('Current session state:', session);
-
-        // Check if the user is verified
         const { data: { user }, error: userError } = await supabase.auth.getUser();
         if (userError) {
-          console.error('User check error:', userError);
           return;
         }
 
-        console.log('Current user state:', user);
-
-        // If user is verified, redirect
         if (user?.email_confirmed_at) {
-          console.log('User verified, redirecting to login...');
           clearInterval(checkInterval);
           sessionStorage.setItem('showVerificationSuccess', 'true');
           navigate('/login');
         }
       } catch (err) {
-        console.error('Error checking verification status:', err);
       }
-    }, 2000); // Check every 2 seconds
+    }, 2000);
 
-    // Cleanup interval on component unmount
     return () => {
       clearInterval(checkInterval);
     };
@@ -75,7 +61,6 @@ const EmailVerificationPending: React.FC = () => {
   };
 
   const handleBackToLogin = () => {
-    // Clear the verification success flag before navigating
     sessionStorage.removeItem('showVerificationSuccess');
     navigate('/login');
   };

@@ -16,10 +16,8 @@ const DatabaseDebug: React.FC = () => {
     try {
       const result = await func();
       setResults({ function: name, data: result });
-      console.log(`${name} result:`, result);
     } catch (err: any) {
       setError(err.message);
-      console.error(`${name} error:`, err);
     } finally {
       setLoading(false);
     }

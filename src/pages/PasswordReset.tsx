@@ -59,7 +59,6 @@ const PasswordReset: React.FC = () => {
       setSessionChecked(true);
     }
     checkOrSetSession();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, email]);
 
   const handleEmailSubmit = (e: React.FormEvent) => {

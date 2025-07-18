@@ -460,22 +460,6 @@ const Home: React.FC = () => {
                   </p>
                 </div>
                 <div>
-                  <h3 className="text-white font-semibold mb-4">Quick Links</h3>
-                  <ul className="space-y-2">
-                    <li><a href="#features" className="text-gray-300 hover:text-white transition-colors">Features</a></li>
-                    <li><a href="#about" className="text-gray-300 hover:text-white transition-colors">About</a></li>
-                    <li><Link to="/login" className="text-gray-300 hover:text-white transition-colors">Login</Link></li>
-                    <li><Link to="/signup" className="text-gray-300 hover:text-white transition-colors">Sign Up</Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-white font-semibold mb-4">Support</h3>
-                  <ul className="space-y-2">
-                    <li><a href="#help" className="text-gray-300 hover:text-white transition-colors">Help Center</a></li>
-                    <li><a href="#feedback" className="text-gray-300 hover:text-white transition-colors">Feedback</a></li>
-                  </ul>
-                </div>
-                <div>
                   <h3 className="text-white font-semibold mb-4">Legal</h3>
                   <ul className="space-y-2">
                     <li><a href="/privacy" className="text-gray-300 hover:text-white transition-colors">Privacy Policy</a></li>

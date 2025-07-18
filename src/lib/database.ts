@@ -1,8 +1,6 @@
 import { supabase } from './supabase';
 
-// Database service matching your actual schema
 export const DatabaseService = {
-  // Debug function to list all tables
   async listTables() {
     try {
       const { data, error } = await supabase
@@ -11,15 +9,12 @@ export const DatabaseService = {
         .eq('table_schema', 'public');
       
       if (error) throw error;
-      console.log('Available tables:', data);
       return data;
     } catch (error) {
-      console.error('Error listing tables:', error);
       return null;
     }
   },
 
-  // Debug function to get table structure
   async getTableStructure(tableName: string) {
     try {
       const { data, error } = await supabase
@@ -29,15 +24,12 @@ export const DatabaseService = {
         .eq('table_name', tableName);
       
       if (error) throw error;
-      console.log(`Table structure for ${tableName}:`, data);
       return data;
     } catch (error) {
-      console.error(`Error getting structure for ${tableName}:`, error);
       return null;
     }
   },
 
-  // Get user profile (matches your profiles table)
   async getUserProfile(userId: string) {
     try {
       const { data, error } = await supabase
@@ -49,12 +41,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting user profile:', error);
       return null;
     }
   },
 
-  // Search users by username (case-sensitive)
   async searchUsersByUsername(username: string, currentUserId: string) {
     try {
       const { data, error } = await supabase
@@ -67,12 +57,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error searching users:', error);
       return null;
     }
   },
 
-  // Get user routes (matches your routes table)
   async getUserRoutes(userId: string) {
     try {
       const { data, error } = await supabase
@@ -84,12 +72,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting user routes:', error);
       return null;
     }
   },
 
-  // Get routes sent to the user (where sent column is not "none")
   async getReceivedRoutes(userId: string) {
     try {
       const { data, error } = await supabase
@@ -110,12 +96,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting received routes:', error);
       return null;
     }
   },
 
-  // Get all public routes
   async getPublicRoutes() {
     try {
       const { data, error } = await supabase
@@ -135,12 +119,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting public routes:', error);
       return null;
     }
   },
 
-  // Get user's friends (accepted friend requests)
   async getUserFriends(userId: string) {
     try {
       const { data, error } = await supabase
@@ -167,7 +149,6 @@ export const DatabaseService = {
       
       if (error) throw error;
       
-      // Transform to show friends (not requests)
       const friends = data?.map(request => {
         if (request.sender_id === userId) {
           return request.receiver;
@@ -178,12 +159,10 @@ export const DatabaseService = {
       
       return friends;
     } catch (error) {
-      console.error('Error getting user friends:', error);
       return null;
     }
   },
 
-  // Get pending friend requests (sent to the user)
   async getPendingFriendRequests(userId: string) {
     try {
       const { data, error } = await supabase
@@ -204,12 +183,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting pending friend requests:', error);
       return null;
     }
   },
 
-  // Get sent friend requests (sent by the user)
   async getSentFriendRequests(userId: string) {
     try {
       const { data, error } = await supabase
@@ -230,15 +207,12 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting sent friend requests:', error);
       return null;
     }
   },
 
-  // Send a friend request
   async sendFriendRequest(senderId: string, receiverId: string) {
     try {
-      // Check if request already exists
       const { data: existingRequest } = await supabase
         .from('friend_requests')
         .select('*')
@@ -263,12 +237,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error sending friend request:', error);
       throw error;
     }
   },
 
-  // Accept a friend request
   async acceptFriendRequest(requestId: string) {
     try {
       const { data, error } = await supabase
@@ -284,12 +256,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error accepting friend request:', error);
       throw error;
     }
   },
 
-  // Reject a friend request
   async rejectFriendRequest(requestId: string) {
     try {
       const { data, error } = await supabase
@@ -305,12 +275,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error rejecting friend request:', error);
       throw error;
     }
   },
 
-  // Cancel a sent friend request
   async cancelFriendRequest(requestId: string) {
     try {
       const { data, error } = await supabase
@@ -323,12 +291,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error canceling friend request:', error);
       throw error;
     }
   },
 
-  // Get messages for a specific route
   async getRouteMessages(routeId: string) {
     try {
       const { data, error } = await supabase
@@ -348,12 +314,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting route messages:', error);
       return null;
     }
   },
 
-  // Send a message about a route
   async sendRouteMessage(routeId: string, senderId: string, receiverId: string, text: string) {
     try {
       const { data, error } = await supabase
@@ -371,12 +335,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error sending route message:', error);
       return null;
     }
   },
 
-  // Get messages sent to a specific user
   async getMessagesForUser(userId: string) {
     try {
       const { data, error } = await supabase
@@ -401,12 +363,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error getting messages for user:', error);
       return null;
     }
   },
 
-  // Update user profile
   async updateUserProfile(userId: string, updates: {
     name?: string;
     username?: string;
@@ -428,12 +388,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error updating user profile:', error);
       throw error;
     }
   },
 
-  // Create test profile
   async createTestProfile(userId: string) {
     try {
       const { data, error } = await supabase
@@ -454,12 +412,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating test profile:', error);
       return null;
     }
   },
 
-  // Create test route
   async createTestRoute(userId: string) {
     try {
       const { data, error } = await supabase
@@ -481,12 +437,10 @@ export const DatabaseService = {
       if (error) throw error;
       return data;
     } catch (error) {
-      console.error('Error creating test route:', error);
       return null;
     }
   },
 
-  // Get sample data from a table
   async getSampleData(tableName: string, limit: number = 5) {
     try {
       const { data, error } = await supabase
@@ -495,10 +449,8 @@ export const DatabaseService = {
         .limit(limit);
       
       if (error) throw error;
-      console.log(`Sample data from ${tableName}:`, data);
       return data;
     } catch (error) {
-      console.error(`Error getting sample data from ${tableName}:`, error);
       return null;
     }
   }

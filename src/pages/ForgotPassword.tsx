@@ -16,7 +16,6 @@ const ForgotPassword: React.FC = () => {
     setLoading(true);
     setError('');
 
-    // Cooldown logic
     const lastResetKey = `last_reset_${email}`;
     const lastReset = localStorage.getItem(lastResetKey);
     const now = Date.now();
@@ -35,7 +34,6 @@ const ForgotPassword: React.FC = () => {
       localStorage.setItem(lastResetKey, now.toString());
       setSuccess(true);
     } catch (error: any) {
-      console.error('Password reset error:', error);
       setError(error.message);
     } finally {
       setLoading(false);

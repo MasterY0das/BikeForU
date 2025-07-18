@@ -13,7 +13,6 @@ const Login: React.FC = () => {
   const { login } = useAuth();
 
   useEffect(() => {
-    // Check if user just verified their email
     const showSuccess = sessionStorage.getItem('showVerificationSuccess');
     if (showSuccess === 'true') {
       setShowVerificationSuccess(true);
@@ -35,7 +34,6 @@ const Login: React.FC = () => {
         navigate('/dashboard');
       }
     } catch (error: any) {
-      console.error('Login error:', error);
       setError(error.message || 'Failed to login');
     } finally {
       setLoading(false);

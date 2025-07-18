@@ -39,7 +39,6 @@ const Signup: React.FC = () => {
         navigate('/verification-pending');
       }
     } catch (error: any) {
-      console.error('Signup error:', error);
       setError(error.message || 'Failed to sign up');
     } finally {
       setLoading(false);
