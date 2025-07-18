@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
+import { useTheme } from '../contexts/ThemeContext';
 import { DatabaseService } from '../lib/database';
 import FriendRequests from '../components/FriendRequests';
 
@@ -56,6 +57,7 @@ interface Profile {
 
 const Dashboard: React.FC = () => {
   const { user } = useAuth();
+  const { theme } = useTheme();
   const [routes, setRoutes] = useState<Route[]>([]);
   const [receivedRoutes, setReceivedRoutes] = useState<Route[]>([]);
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -131,19 +133,19 @@ const Dashboard: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
+      <div className={`min-h-screen flex items-center justify-center ${theme === 'dark' ? 'bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white' : 'bg-white text-gray-900'}`}>
         <div className="text-center">
           <div className="spinner mx-auto mb-4"></div>
-          <p className="text-green-200">Loading your adventure dashboard...</p>
+          <p className={theme === 'dark' ? 'text-green-200' : 'text-gray-600'}>Loading your adventure dashboard...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white">
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white' : 'bg-white text-gray-900'}`}>
       {/* Navigation with Profile */}
-      <nav className="bg-gray-900/90 border-b border-green-800 shadow-sm">
+      <nav className={`${theme === 'dark' ? 'bg-gray-900/90 border-b border-green-800' : 'bg-white border-b border-gray-200'} shadow-sm`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center">
@@ -152,10 +154,8 @@ const Dashboard: React.FC = () => {
                 className="flex items-center space-x-2 focus:outline-none"
                 aria-label="Reload Dashboard"
               >
-                <div className="w-8 h-8 bg-green-600 flex items-center justify-center rounded">
-                  <span className="text-white font-bold text-sm">B</span>
-                </div>
-                <span className="text-white font-bold text-xl">BikeForU</span>
+                <div className={`w-8 h-8 flex items-center justify-center rounded ${theme === 'dark' ? 'bg-green-600' : 'bg-green-500'}`}> <span className="text-white font-bold text-sm">B</span> </div>
+                <span className={`font-bold text-xl ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>BikeForU</span>
               </button>
             </div>
             {/* Profile Section */}
@@ -178,14 +178,14 @@ const Dashboard: React.FC = () => {
                     )}
                   </div>
                   <div className="hidden md:block">
-                    <p className="text-sm font-medium text-white">{profile.name}</p>
-                    <p className="text-xs text-green-200">@{profile.username}</p>
+                    <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>{profile.name}</p>
+                    <p className={`text-xs ${theme === 'dark' ? 'text-green-200' : 'text-gray-600'}`}>@{profile.username}</p>
                   </div>
                 </div>
               )}
               <Link 
                 to="/profile" 
-                className="text-green-200 hover:text-white transition-colors"
+                className={theme === 'dark' ? 'text-green-200 hover:text-white transition-colors' : 'text-gray-600 hover:text-gray-900 transition-colors'}
               >
                 Profile & Settings
               </Link>
@@ -196,9 +196,9 @@ const Dashboard: React.FC = () => {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold mb-8 text-white">Your Adventure Hub</h1>
+        <h1 className={`text-3xl font-bold mb-8 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>Your Adventure Hub</h1>
         {/* Tab Navigation */}
-        <div className="flex space-x-1 bg-green-800/40 p-1 mb-8 rounded-lg">
+        <div className={`flex space-x-1 p-1 mb-8 rounded-lg ${theme === 'dark' ? 'bg-green-800/40' : 'bg-gray-100'}`}>
           <button
             onClick={() => setActiveTab('rides')}
             className={`flex-1 py-2 px-4 text-sm font-medium transition-colors rounded-md ${

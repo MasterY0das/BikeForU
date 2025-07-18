@@ -258,7 +258,6 @@ const Home: React.FC = () => {
                 <nav className="hidden md:flex space-x-8">
                   <a href="#features" className="text-gray-600 hover:text-gray-900 transition-colors">Features</a>
                   <a href="#about" className="text-gray-600 hover:text-gray-900 transition-colors">About</a>
-                  <Link to="/contact" className="text-gray-600 hover:text-gray-900 transition-colors">Contact</Link>
                 </nav>
                 <div className="flex space-x-4">
                   <Link
@@ -473,7 +472,6 @@ const Home: React.FC = () => {
                   <h3 className="text-white font-semibold mb-4">Support</h3>
                   <ul className="space-y-2">
                     <li><a href="#help" className="text-gray-300 hover:text-white transition-colors">Help Center</a></li>
-                    <li><Link to="/contact" className="text-gray-300 hover:text-white transition-colors">Contact Us</Link></li>
                     <li><a href="#feedback" className="text-gray-300 hover:text-white transition-colors">Feedback</a></li>
                   </ul>
                 </div>

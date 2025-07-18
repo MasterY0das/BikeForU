@@ -185,6 +185,11 @@ Note: This request was made through the BikeForU application deletion request fe
                   </ul>
                 </div>
 
+                <div className="mt-6 text-center">
+                  <p className="text-green-600 font-semibold text-lg">Contact: nikhil9kalburgi@gmail.com</p>
+                  <p className="text-gray-500 text-sm mt-2">Please email us from your registered address for account deletion requests.</p>
+                </div>
+
                 <div className="flex space-x-3">
                   <button
                     onClick={() => setStep('password')}
