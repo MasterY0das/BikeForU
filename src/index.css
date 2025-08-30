@@ -2,50 +2,113 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  body {
-    @apply bg-black text-white antialiased;
+/* BikeForU Design System - iOS App Styling */
+:root {
+  /* Light Theme Colors */
+  --background: #f8f6f1;
+  --secondary-background: #f0ede5;
+  --card-background: #ffffff;
+  --text-primary: #2d2d2d;
+  --text-secondary: #5a5a5a;
+  --primary: #654321;
+  --secondary: #A0522D;
+  --accent: #8B4513;
+  --trail: #228B22;
+  --mountain: #696969;
+  --sky: #87CEEB;
+  --earth: #8B4513;
+  --stone: #C0C0C0;
+  --wood: #A0522D;
+  --moss: #556B2F;
+  --sunset: #FF8C00;
+  --water: #4682B4;
+  --border: #d2b48c;
+  --shadow: rgba(139, 115, 85, 0.3);
+  --success: #228B22;
+  --warning: #DAA520;
+  --error: #8B0000;
+}
+
+[data-theme="dark"] {
+  /* Dark Theme Colors */
+  --background: #1a1a1a;
+  --secondary-background: #2a2a2a;
+  --card-background: #2a2a2a;
+  --text-primary: #e8e8e8;
+  --text-secondary: #b0b0b0;
+  --primary: #CD853F;
+  --secondary: #DEB887;
+  --accent: #D2691E;
+  --trail: #32CD32;
+  --mountain: #A9A9A9;
+  --sky: #4682B4;
+  --earth: #D2691E;
+  --stone: #808080;
+  --wood: #DEB887;
+  --moss: #6B8E23;
+  --sunset: #FFA500;
+  --water: #87CEEB;
+  --border: #696969;
+  --shadow: rgba(0, 0, 0, 0.5);
+}
+
+/* Auto-detect system theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a1a1a;
+    --secondary-background: #2a2a2a;
+    --card-background: #2a2a2a;
+    --text-primary: #e8e8e8;
+    --text-secondary: #b0b0b0;
+    --primary: #CD853F;
+    --secondary: #DEB887;
+    --accent: #D2691E;
+    --trail: #32CD32;
+    --mountain: #A9A9A9;
+    --sky: #4682B4;
+    --earth: #D2691E;
+    --stone: #808080;
+    --wood: #DEB887;
+    --moss: #6B8E23;
+    --sunset: #FFA500;
+    --water: #87CEEB;
+    --border: #696969;
+    --shadow: rgba(0, 0, 0, 0.5);
   }
 }
 
-@layer components {
-  .apple-button {
-    @apply inline-block bg-white text-black px-8 py-4 rounded-full text-lg font-semibold 
-           hover:bg-gray-100 transition-colors duration-200;
-  }
-}
-
-@layer utilities {
-  .animate-fade-in {
-    animation: fadeIn 0.5s ease-in-out;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Base styles */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--background);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* Custom component styles */
+.btn-primary {
+  @apply bg-[#8B4513] hover:bg-[#A0522D] text-white px-6 py-3 rounded-lg font-semibold transition-all duration-150 hover:scale-98 shadow-lg;
+}
+
+.btn-secondary {
+  @apply bg-transparent border-2 border-[#8B4513] text-[#8B4513] dark:border-[#D2691E] dark:text-[#D2691E] px-6 py-3 rounded-lg font-semibold hover:bg-[#8B4513] hover:text-white dark:hover:bg-[#D2691E] dark:hover:text-white transition-all duration-150 hover:scale-98;
+}
+
+.card {
+  @apply bg-white dark:bg-[#2a2a2a] p-6 rounded-2xl border border-[#d2b48c] dark:border-[#696969] shadow-lg;
+}
+
+/* Smooth transitions for theme switching */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 } 
