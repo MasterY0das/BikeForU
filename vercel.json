@@ -7,5 +7,7 @@
   ],
   "buildCommand": "npm run build",
   "outputDirectory": "build",
-  "framework": "create-react-app"
+  "framework": "create-react-app",
+  "installCommand": "npm install",
+  "devCommand": "npm start"
 } 
