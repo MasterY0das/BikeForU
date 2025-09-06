@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { DatabaseService } from '../lib/database';
 
@@ -34,9 +34,9 @@ const FriendRequests: React.FC = () => {
     if (user) {
       loadFriendRequests();
     }
-  }, [user]);
+  }, [user, loadFriendRequests]);
 
-  const loadFriendRequests = async () => {
+  const loadFriendRequests = useCallback(async () => {
     if (!user) return;
     
     try {
@@ -51,7 +51,7 @@ const FriendRequests: React.FC = () => {
       console.error('Error loading friend requests:', error);
       setError('Failed to load friend requests');
     }
-  };
+  }, [user]);
 
   const handleSearch = async () => {
     if (!user || !searchQuery.trim()) return;
