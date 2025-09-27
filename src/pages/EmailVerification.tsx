@@ -27,7 +27,7 @@ const EmailVerification: React.FC = () => {
         setVerificationStatus('success');
         setTimeout(() => {
           sessionStorage.setItem('showVerificationSuccess', 'true');
-          navigate('/login');
+          navigate('/');
         }, 1500);
       } catch (error: any) {
         setVerificationStatus('error');
@@ -63,31 +63,31 @@ const EmailVerification: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-amber-900 text-white flex items-center justify-center">
       <div className="max-w-2xl mx-auto px-6 py-12 text-center">
         <div className="mb-8">
           <h1 className="text-5xl font-bold mb-4">BikeForU</h1>
-          <p className="text-xl text-gray-400">Email Verification</p>
+          <p className="text-xl text-amber-200">Email Verification</p>
         </div>
 
-        <div className="bg-gray-900 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-amber-900/80 rounded-2xl p-8 shadow-2xl">
           {verificationStatus === 'loading' && (
             <div className="space-y-4">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400 mx-auto"></div>
               <p className="text-xl">Verifying your email...</p>
             </div>
           )}
 
           {verificationStatus === 'success' && (
             <div className="space-y-6">
-              <div className="text-green-500 text-6xl mb-4">✓</div>
+              <div className="text-amber-400 text-6xl mb-4">✓</div>
               <h2 className="text-3xl font-semibold">Email Verified!</h2>
-              <p className="text-gray-400">Your email has been successfully verified.</p>
+              <p className="text-amber-200">Your email has been successfully verified.</p>
               <button
-                onClick={() => navigate('/login')}
-                className="inline-block bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                onClick={() => navigate('/')}
+                className="inline-block bg-amber-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
               >
-                Continue to Login
+                Continue to Home
               </button>
             </div>
           )}
@@ -96,10 +96,10 @@ const EmailVerification: React.FC = () => {
             <div className="space-y-6">
               <div className="text-red-500 text-6xl mb-4">✕</div>
               <h2 className="text-3xl font-semibold">Verification Failed</h2>
-              <p className="text-gray-400">{errorMessage}</p>
+              <p className="text-amber-200">{errorMessage}</p>
               <button
                 onClick={handleVerifyClick}
-                className="inline-block bg-white text-black px-8 py-4 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+                className="inline-block bg-amber-600 text-white px-8 py-4 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
               >
                 Try Again
               </button>

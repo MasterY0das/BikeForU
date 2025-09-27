@@ -41,18 +41,18 @@ const ForgotPassword: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex items-center justify-center">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-amber-900 text-white flex items-center justify-center">
       <div className="max-w-md w-full mx-4">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2">Reset Password</h1>
-          <p className="text-gray-400">Enter your email to receive a password reset link</p>
+          <p className="text-amber-200">Enter your email to receive a password reset link</p>
         </div>
 
         {success ? (
-          <div className="bg-gray-900 rounded-lg p-6 text-center">
-            <div className="text-green-500 text-6xl mb-4">✓</div>
+          <div className="bg-amber-900/80 rounded-lg p-6 text-center">
+            <div className="text-amber-400 text-6xl mb-4">✓</div>
             <h2 className="text-2xl font-semibold mb-4">Check Your Email</h2>
-            <p className="text-gray-400 mb-6">
+            <p className="text-amber-200 mb-6">
               If an account exists with {email}, you will receive a password reset link.
               <br />
               <span className="text-sm mt-2 block">
@@ -60,16 +60,16 @@ const ForgotPassword: React.FC = () => {
               </span>
             </p>
             <button
-              onClick={() => navigate('/login')}
-              className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+              onClick={() => navigate('/')}
+              className="w-full bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors"
             >
-              Back to Login
+              Back to Home
             </button>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-amber-200 mb-2">
                 Email
               </label>
               <input
@@ -77,7 +77,7 @@ const ForgotPassword: React.FC = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white"
+                className="w-full px-4 py-3 bg-amber-800/50 border border-amber-600 rounded-lg focus:outline-none focus:border-amber-400 text-white"
                 required
                 placeholder="Enter your email address"
               />
@@ -90,11 +90,11 @@ const ForgotPassword: React.FC = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-white text-black px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors disabled:opacity-50"
+              className="w-full bg-amber-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-amber-700 transition-colors disabled:opacity-50"
             >
               {loading ? (
                 <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-black mr-2"></div>
+                  <div className="animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-white mr-2"></div>
                   Sending...
                 </div>
               ) : (
@@ -103,8 +103,8 @@ const ForgotPassword: React.FC = () => {
             </button>
 
             <div className="text-center">
-              <Link to="/login" className="text-blue-400 hover:text-blue-300">
-                Back to Login
+              <Link to="/" className="text-amber-400 hover:text-amber-300">
+                Back to Home
               </Link>
             </div>
           </form>

@@ -100,22 +100,22 @@ const PasswordReset: React.FC = () => {
 
   if (emailPrompt) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
-        <div className="max-w-md w-full mx-4 text-center bg-gray-900/80 rounded-2xl shadow-2xl p-8">
+      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-amber-900 text-white flex items-center justify-center">
+        <div className="max-w-md w-full mx-4 text-center bg-amber-900/80 rounded-2xl shadow-2xl p-8">
           <h2 className="text-3xl font-bold mb-4 gradient-text">Enter Your Email</h2>
-          <p className="text-green-200 mb-6">For security, please enter the email address associated with your account to continue resetting your password.</p>
+          <p className="text-amber-200 mb-6">For security, please enter the email address associated with your account to continue resetting your password.</p>
           <form onSubmit={handleEmailSubmit} className="space-y-6">
             <input
               type="email"
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-gray-800 border border-green-600 rounded-lg focus:outline-none focus:border-green-400 text-white placeholder-green-200"
+              className="w-full px-4 py-3 bg-gray-800 border border-amber-600 rounded-lg focus:outline-none focus:border-amber-400 text-white placeholder-amber-200"
               required
               placeholder="Enter your email address"
             />
             <button
               type="submit"
-              className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md"
+              className="w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md"
             >
               Continue
             </button>
@@ -127,10 +127,10 @@ const PasswordReset: React.FC = () => {
 
   if (!sessionChecked) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-amber-900 text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-400 mx-auto mb-4"></div>
-          <p className="text-green-200">Checking reset link...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-amber-400 mx-auto mb-4"></div>
+          <p className="text-amber-200">Checking reset link...</p>
         </div>
       </div>
     );
@@ -138,14 +138,14 @@ const PasswordReset: React.FC = () => {
 
   if (!hasSession) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
-        <div className="max-w-md w-full mx-4 text-center bg-gray-900/80 rounded-2xl shadow-2xl p-8">
+      <div className="min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-amber-900 text-white flex items-center justify-center">
+        <div className="max-w-md w-full mx-4 text-center bg-amber-900/80 rounded-2xl shadow-2xl p-8">
           <div className="text-red-500 text-6xl mb-4">✕</div>
           <h2 className="text-2xl font-semibold mb-4">Invalid or Expired Link</h2>
-          <p className="text-green-200 mb-6">{errorMessage || 'Your reset link is invalid or has expired. Please request a new password reset.'}</p>
+          <p className="text-amber-200 mb-6">{errorMessage || 'Your reset link is invalid or has expired. Please request a new password reset.'}</p>
           <button
             onClick={() => navigate('/forgot-password')}
-            className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md"
+            className="w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md"
           >
             Request New Reset Link
           </button>
@@ -155,31 +155,31 @@ const PasswordReset: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-900 via-green-800 to-green-900 text-white flex items-center justify-center">
-      <div className="max-w-md w-full mx-4 bg-gray-900/80 rounded-2xl shadow-2xl p-8">
+    <div className="min-h-screen bg-gradient-to-br from-amber-900 via-amber-800 to-amber-900 text-white flex items-center justify-center">
+      <div className="max-w-md w-full mx-4 bg-amber-900/80 rounded-2xl shadow-2xl p-8">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold mb-2 gradient-text">Reset Password</h1>
-          <p className="text-green-200">Enter your new password</p>
+          <p className="text-amber-200">Enter your new password</p>
         </div>
 
         {status === 'success' ? (
-          <div className="bg-green-900/80 rounded-lg p-6 text-center shadow-lg">
-            <div className="text-green-400 text-6xl mb-4">✓</div>
+          <div className="bg-amber-900/80 rounded-lg p-6 text-center shadow-lg">
+            <div className="text-amber-400 text-6xl mb-4">✓</div>
             <h2 className="text-2xl font-semibold mb-4">Password Reset Successful!</h2>
-            <p className="text-green-200 mb-6">
+            <p className="text-amber-200 mb-6">
               Your password has been successfully updated.
             </p>
             <button
-              onClick={() => navigate('/login')}
-              className="w-full bg-white text-green-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-md"
+              onClick={() => navigate('/')}
+              className="w-full bg-white text-amber-900 px-6 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors shadow-md"
             >
-              Return to Login
+              Return to Home
             </button>
           </div>
         ) : (
           <form onSubmit={handleResetPassword} className="space-y-6">
             <div>
-              <label htmlFor="newPassword" className="block text-sm font-medium text-green-200 mb-2">
+              <label htmlFor="newPassword" className="block text-sm font-medium text-amber-200 mb-2">
                 New Password
               </label>
               <input
@@ -187,14 +187,14 @@ const PasswordReset: React.FC = () => {
                 type="password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-green-600 rounded-lg focus:outline-none focus:border-green-400 text-white placeholder-green-200"
+                className="w-full px-4 py-3 bg-gray-800 border border-amber-600 rounded-lg focus:outline-none focus:border-amber-400 text-white placeholder-amber-200"
                 required
                 placeholder="Enter new password"
               />
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-green-200 mb-2">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-amber-200 mb-2">
                 Confirm New Password
               </label>
               <input
@@ -202,7 +202,7 @@ const PasswordReset: React.FC = () => {
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-gray-800 border border-green-600 rounded-lg focus:outline-none focus:border-green-400 text-white placeholder-green-200"
+                className="w-full px-4 py-3 bg-gray-800 border border-amber-600 rounded-lg focus:outline-none focus:border-amber-400 text-white placeholder-amber-200"
                 required
                 placeholder="Confirm new password"
               />
@@ -215,7 +215,7 @@ const PasswordReset: React.FC = () => {
             <button
               type="submit"
               disabled={status === 'loading'}
-              className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md disabled:opacity-50"
+              className="w-full bg-amber-600 hover:bg-amber-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors shadow-md disabled:opacity-50"
             >
               {status === 'loading' ? (
                 <div className="flex items-center justify-center">

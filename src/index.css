@@ -2,52 +2,111 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom CSS Variables for Theme Support */
+/* Bike4UF Adventure Theme - CSS Variables Implementation */
 :root {
-  --primary-green: #059669;
-  --primary-green-hover: #047857;
-  --secondary-green: #10b981;
+  /* Light Theme - Adventure/Outdoor Colors */
+  --background-color: #f8f6f1;
+  --secondary-background: #f0ede5;
+  --text-color: #2d2d2d;
+  --secondary-text-color: #5a5a5a;
+  --accent-color: #8B4513;
+  --primary-color: #654321;
+  --secondary-color: #A0522D;
+  --button-background: #8B4513;
+  --button-text-color: #f8f6f1;
+  --button-border-color: #654321;
+  --card-background: #ffffff;
+  --border-color: #d2b48c;
+  --shadow-color: rgba(139, 115, 85, 0.3);
+  
+  /* Adventure-Inspired Colors */
+  --trail-color: #228B22;
+  --mountain-color: #696969;
+  --sky-color: #87CEEB;
+  --earth-color: #8B4513;
+  --stone-color: #C0C0C0;
+  --wood-color: #A0522D;
+  --moss-color: #556B2F;
+  --sunset-color: #FF8C00;
+  --water-color: #4682B4;
+  
+  /* Status Colors */
+  --success-color: #228B22;
+  --warning-color: #DAA520;
+  --error-color: #8B0000;
+  
+  /* Legacy Variables for Backward Compatibility */
+  --primary-green: #228B22;
+  --primary-green-hover: #1e7e1e;
+  --secondary-green: #32CD32;
   --accent-green: #34d399;
   --light-green: #d1fae5;
   --dark-green: #065f46;
-  
-  /* Light Theme Colors */
-  --bg-primary: #ffffff;
-  --bg-secondary: #f9fafb;
+  --bg-primary: #f8f6f1;
+  --bg-secondary: #f0ede5;
   --bg-tertiary: #f3f4f6;
-  --text-primary: #111827;
-  --text-secondary: #6b7280;
+  --text-primary: #2d2d2d;
+  --text-secondary: #5a5a5a;
   --text-tertiary: #9ca3af;
-  --border-primary: #e5e7eb;
+  --border-primary: #d2b48c;
   --border-secondary: #d1d5db;
-  --shadow-primary: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-secondary: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-primary: 0 3px 6px var(--shadow-color);
+  --shadow-secondary: 0 4px 8px var(--shadow-color);
 }
 
-/* Dark Theme Colors */
+/* Dark Theme */
 [data-theme="dark"] {
-  --bg-primary: #111827;
-  --bg-secondary: #1f2937;
+  --background-color: #1a1a1a;
+  --secondary-background: #2a2a2a;
+  --text-color: #e8e8e8;
+  --secondary-text-color: #b0b0b0;
+  --accent-color: #D2691E;
+  --primary-color: #CD853F;
+  --secondary-color: #DEB887;
+  --button-background: #D2691E;
+  --button-text-color: #f8f6f1;
+  --button-border-color: #CD853F;
+  --card-background: #2a2a2a;
+  --border-color: #696969;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  
+  /* Adventure-Inspired Colors - Dark */
+  --trail-color: #32CD32;
+  --mountain-color: #A9A9A9;
+  --sky-color: #4682B4;
+  --earth-color: #D2691E;
+  --stone-color: #808080;
+  --wood-color: #DEB887;
+  --moss-color: #6B8E23;
+  --sunset-color: #FFA500;
+  --water-color: #87CEEB;
+  
+  /* Legacy Variables for Backward Compatibility */
+  --primary-green: #32CD32;
+  --primary-green-hover: #2eb82e;
+  --secondary-green: #228B22;
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2a2a2a;
   --bg-tertiary: #374151;
-  --text-primary: #f9fafb;
-  --text-secondary: #d1d5db;
+  --text-primary: #e8e8e8;
+  --text-secondary: #b0b0b0;
   --text-tertiary: #9ca3af;
-  --border-primary: #374151;
+  --border-primary: #696969;
   --border-secondary: #4b5563;
-  --shadow-primary: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --shadow-secondary: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-primary: 0 3px 6px var(--shadow-color);
+  --shadow-secondary: 0 4px 8px var(--shadow-color);
 }
 
 /* Base Styles */
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
+  background-color: var(--background-color);
+  color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -56,47 +115,273 @@ code {
     monospace;
 }
 
-/* Custom Components */
+/* Bike4UF Component Styles */
 @layer components {
+  /* Primary Button (NaturalButtonStyle) */
+  .button-primary {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 14px 24px;
+    background: var(--button-background);
+    color: var(--button-text-color);
+    border: 1.5px solid var(--button-border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: transform 0.15s ease-in-out;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+  
+  .button-primary:hover {
+    transform: scale(0.96);
+  }
+  
+  /* Outline Button (OutlineButtonStyle) */
+  .button-outline {
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 14px 24px;
+    background: var(--card-background);
+    color: var(--button-background);
+    border: 2px solid var(--button-border-color);
+    border-radius: 8px;
+    transition: transform 0.15s ease-in-out;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+  
+  .button-outline:hover {
+    transform: scale(0.96);
+  }
+  
+  /* Natural Card */
+  .card-natural {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    padding: 20px;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 3px 6px var(--shadow-color);
+    transition: all 0.3s ease;
+  }
+  
+  /* Trail Card */
+  .card-trail {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    padding: 20px;
+    background: var(--card-background);
+    border: 2px solid var(--trail-color);
+    border-radius: 16px;
+    box-shadow: 0 4px 8px var(--shadow-color);
+    transition: all 0.3s ease;
+  }
+  
+  /* Text Fields */
+  .text-field {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    padding: 16px;
+    background: var(--secondary-background);
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    width: 100%;
+    transition: border-color 0.3s ease;
+  }
+  
+  .text-field:focus {
+    border-color: var(--accent-color);
+    outline: none;
+  }
+
+  /* Legacy Button Classes - Updated with Adventure Theme */
   .btn-primary {
-    @apply bg-green-600 hover:bg-green-700 text-white px-6 py-2 font-medium transition-colors rounded-lg transform hover:scale-105;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 14px 24px;
+    background: var(--button-background);
+    color: var(--button-text-color);
+    border: 1.5px solid var(--button-border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transition: all 0.3s ease;
+    transform: scale(1);
+  }
+  
+  .btn-primary:hover {
+    transform: scale(0.95);
   }
 
   .btn-secondary {
-    @apply bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 font-medium transition-colors rounded-lg;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    background: var(--secondary-color);
+    color: var(--button-text-color);
+    padding: 14px 24px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
   }
 
   .btn-outline {
-    @apply border-2 border-green-600 text-green-600 hover:bg-green-600 hover:text-white px-6 py-2 font-medium transition-colors rounded-lg;
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    padding: 14px 24px;
+    background: var(--card-background);
+    color: var(--button-background);
+    border: 2px solid var(--button-border-color);
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    transform: scale(1);
+  }
+  
+  .btn-outline:hover {
+    transform: scale(0.95);
   }
 
   .spinner {
-    @apply animate-spin rounded-full h-12 w-12 border-b-2 border-green-600;
+    @apply animate-spin rounded-full h-12 w-12 border-b-2;
+    border-color: var(--trail-color);
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent;
+    background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
   .glass-morphism {
-    @apply backdrop-blur-md bg-white/10 border border-white/20;
+    @apply backdrop-blur-md border;
+    background: rgba(248, 246, 241, 0.1);
+    border-color: rgba(248, 246, 241, 0.2);
   }
 
   .card {
-    @apply bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 3px 6px var(--shadow-color);
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 4px 8px var(--shadow-color);
   }
 
   .card-dark {
-    @apply bg-gray-800 border border-gray-700 rounded-lg shadow-sm hover:shadow-md transition-all duration-300;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 3px 6px var(--shadow-color);
+    transition: all 0.3s ease;
   }
 
   .input-field {
-    @apply w-full px-4 py-2 bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-colors;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    padding: 16px;
+    background: var(--secondary-background);
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
+  }
+  
+  .input-field:focus {
+    border-color: var(--accent-color);
+    outline: none;
   }
 
   .input-field-dark {
-    @apply w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 text-white transition-colors;
+    font-family: 'Inter', sans-serif;
+    width: 100%;
+    padding: 16px;
+    background: var(--secondary-background);
+    border: 1.5px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-color);
+    transition: border-color 0.3s ease;
   }
+  
+  .input-field-dark:focus {
+    border-color: var(--accent-color);
+    outline: none;
+  }
+}
+
+/* Background Gradients */
+.background-natural {
+  background: linear-gradient(135deg, 
+    rgba(248, 246, 241, 0.8) 0%, 
+    rgba(240, 237, 229, 0.6) 100%);
+}
+
+.background-adventure {
+  background: linear-gradient(180deg, 
+    rgba(135, 206, 235, 0.1) 0%, 
+    rgba(34, 139, 34, 0.05) 100%);
+}
+
+.background-login {
+  background: linear-gradient(135deg, 
+    rgba(135, 206, 235, 0.3) 0%, 
+    rgba(85, 107, 47, 0.2) 50%, 
+    rgba(139, 69, 19, 0.1) 100%);
+}
+
+/* Typography Classes */
+.text-large-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.text-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.text-headline {
+  font-family: 'Inter', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.text-body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text-color);
+}
+
+.text-subheadline {
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--secondary-text-color);
+}
+
+.text-caption {
+  font-family: 'Inter', sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--secondary-text-color);
 }
 
 /* Animation Classes */
@@ -153,10 +438,10 @@ code {
 
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 5px rgba(16, 185, 129, 0.3);
+    box-shadow: 0 0 5px var(--trail-color);
   }
   50% {
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.6);
+    box-shadow: 0 0 20px var(--trail-color);
   }
 }
 
@@ -193,51 +478,60 @@ code {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-secondary);
+  background: var(--secondary-background);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--primary-green);
+  background: var(--accent-color);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--primary-green-hover);
+  background: var(--primary-color);
 }
 
 /* Scrollbar for Firefox */
 * {
   scrollbar-width: thin;
-  scrollbar-color: var(--primary-green) var(--bg-secondary);
+  scrollbar-color: var(--accent-color) var(--secondary-background);
 }
 
 /* Focus Styles */
 *:focus {
-  outline: 2px solid var(--primary-green);
+  outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
 
 /* Selection Styles */
 ::selection {
-  background-color: var(--light-green);
-  color: var(--dark-green);
+  background-color: var(--trail-color);
+  color: var(--background-color);
 }
 
 /* Loading States */
 .loading-skeleton {
-  background: linear-gradient(90deg, var(--bg-secondary) 25%, var(--bg-tertiary) 50%, var(--bg-secondary) 75%);
+  background: linear-gradient(90deg, var(--secondary-background) 25%, var(--border-color) 50%, var(--secondary-background) 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
 }
 
 /* Responsive Design */
 @media (max-width: 640px) {
-  .btn-primary, .btn-secondary, .btn-outline {
-    @apply px-4 py-2 text-sm;
+  .button-primary, .button-outline, .btn-primary, .btn-secondary, .btn-outline {
+    padding: 12px 20px;
+    font-size: 14px;
   }
   
-  .card {
-    @apply p-4;
+  .card, .card-natural, .card-trail {
+    padding: 16px;
+  }
+  
+  .text-large-title {
+    font-size: 28px;
+  }
+  
+  .text-title {
+    font-size: 20px;
   }
 }
 
@@ -256,11 +550,11 @@ code {
 /* High Contrast Mode */
 @media (prefers-contrast: high) {
   :root {
-    --primary-green: #000000;
-    --primary-green-hover: #333333;
-    --text-primary: #000000;
-    --text-secondary: #333333;
-    --border-primary: #000000;
+    --accent-color: #000000;
+    --primary-color: #333333;
+    --text-color: #000000;
+    --secondary-text-color: #333333;
+    --border-color: #000000;
   }
 }
 
@@ -275,23 +569,6 @@ code {
   }
 }
 
-/* Dark Mode Overrides */
-[data-theme="dark"] .btn-primary {
-  @apply bg-green-600 hover:bg-green-700;
-}
-
-[data-theme="dark"] .card {
-  @apply bg-gray-800 border-gray-700;
-}
-
-[data-theme="dark"] .input-field {
-  @apply bg-gray-700 border-gray-600 text-white;
-}
-
-[data-theme="dark"] .spinner {
-  @apply border-green-400;
-}
-
 /* Theme Transition */
 * {
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
@@ -299,15 +576,22 @@ code {
 
 /* Custom Utility Classes */
 .text-gradient {
-  @apply bg-gradient-to-r from-green-600 to-green-400 bg-clip-text text-transparent;
+  background: linear-gradient(135deg, var(--accent-color) 0%, var(--primary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .bg-gradient-primary {
-  background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
 }
 
 .bg-gradient-secondary {
-  background: linear-gradient(135deg, var(--light-green) 0%, var(--accent-green) 100%);
+  background: linear-gradient(135deg, var(--trail-color) 0%, var(--moss-color) 100%);
+}
+
+.bg-gradient-adventure {
+  background: linear-gradient(135deg, var(--sky-color) 0%, var(--trail-color) 100%);
 }
 
 .shadow-custom {
@@ -320,60 +604,135 @@ code {
 
 /* Interactive Elements */
 .interactive {
-  @apply transition-all duration-300 transform hover:scale-105;
+  transition: all 0.3s ease;
+  transform: scale(1);
 }
 
 .interactive:hover {
-  @apply shadow-lg;
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px var(--shadow-color);
 }
 
 /* Status Indicators */
 .status-online {
-  @apply w-3 h-3 bg-green-500 rounded-full;
+  width: 12px;
+  height: 12px;
+  background: var(--success-color);
+  border-radius: 50%;
 }
 
 .status-offline {
-  @apply w-3 h-3 bg-gray-400 rounded-full;
+  width: 12px;
+  height: 12px;
+  background: var(--mountain-color);
+  border-radius: 50%;
 }
 
 .status-away {
-  @apply w-3 h-3 bg-yellow-500 rounded-full;
+  width: 12px;
+  height: 12px;
+  background: var(--warning-color);
+  border-radius: 50%;
 }
 
 /* Badge Styles */
 .badge {
-  @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
 }
 
 .badge-success {
-  @apply bg-green-100 text-green-800;
+  background: var(--success-color);
+  color: var(--background-color);
 }
 
 .badge-warning {
-  @apply bg-yellow-100 text-yellow-800;
+  background: var(--warning-color);
+  color: var(--background-color);
 }
 
 .badge-error {
-  @apply bg-red-100 text-red-800;
+  background: var(--error-color);
+  color: var(--background-color);
 }
 
 .badge-info {
-  @apply bg-blue-100 text-blue-800;
+  background: var(--sky-color);
+  color: var(--background-color);
 }
 
-/* Dark mode badge overrides */
-[data-theme="dark"] .badge-success {
-  @apply bg-green-900 text-green-200;
+.badge-trail {
+  background: var(--trail-color);
+  color: var(--background-color);
 }
 
-[data-theme="dark"] .badge-warning {
-  @apply bg-yellow-900 text-yellow-200;
+.badge-earth {
+  background: var(--earth-color);
+  color: var(--background-color);
 }
 
-[data-theme="dark"] .badge-error {
-  @apply bg-red-900 text-red-200;
+/* Adventure-themed utility classes */
+.bg-trail {
+  background-color: var(--trail-color);
 }
 
-[data-theme="dark"] .badge-info {
-  @apply bg-blue-900 text-blue-200;
-} 
+.bg-mountain {
+  background-color: var(--mountain-color);
+}
+
+.bg-sky {
+  background-color: var(--sky-color);
+}
+
+.bg-earth {
+  background-color: var(--earth-color);
+}
+
+.bg-wood {
+  background-color: var(--wood-color);
+}
+
+.bg-moss {
+  background-color: var(--moss-color);
+}
+
+.text-trail {
+  color: var(--trail-color);
+}
+
+.text-mountain {
+  color: var(--mountain-color);
+}
+
+.text-sky {
+  color: var(--sky-color);
+}
+
+.text-earth {
+  color: var(--earth-color);
+}
+
+.text-wood {
+  color: var(--wood-color);
+}
+
+.text-moss {
+  color: var(--moss-color);
+}
+
+.border-trail {
+  border-color: var(--trail-color);
+}
+
+.border-mountain {
+  border-color: var(--mountain-color);
+}
+
+.border-earth {
+  border-color: var(--earth-color);
+}
