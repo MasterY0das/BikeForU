@@ -36,7 +36,7 @@ const EmailVerification: React.FC = () => {
     };
 
     verifyEmail();
-  }, [searchParams]);
+  }, [searchParams, navigate]);
 
   const handleVerifyClick = async () => {
     try {

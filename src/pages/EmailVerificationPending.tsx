@@ -19,7 +19,7 @@ const EmailVerificationPending: React.FC = () => {
 
     const checkInterval = setInterval(async () => {
       try {
-        const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+        const { error: sessionError } = await supabase.auth.getSession();
         
         if (sessionError) {
           return;
